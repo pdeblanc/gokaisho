@@ -1,15 +1,14 @@
 import React, { Component } from 'react';
-import ReactDOM from 'react-dom';
+import { createRoot } from 'react-dom/client';
+import Goban from "./Goban";
 
 declare global {
-    interface Window { do_stuff: any; }
+    interface Window { main: any; }
 }
 
-
-window.do_stuff = function() {
-  ReactDOM.render(
-    <h1>Test</h1>,
-    document.getElementById("react-root")
+window.main = function() {
+  createRoot(document.getElementById("react-root")).render(
+    <Goban />,
   );
 };
 
