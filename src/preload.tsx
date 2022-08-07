@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import { createRoot } from 'react-dom/client';
 import Goban from "./Goban";
 import fs from "fs";
-const SgfParser = require('ts-sgf-parser').SgfParser;
+import { MutableSituation } from "./go";
+const SgfParser = require('ts-sgf-parser').SgfParser;  // using import syntax raises error TS2309??
 
 const SGF_PATH = "/Users/peter/repos/miai/game01__miai_values_tromp.sgf"
 
