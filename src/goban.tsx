@@ -82,6 +82,19 @@ const Goban: React.FC<GobanProps> = ({board}) => {
 	  ))
 	}
       </>
+      <>
+	{
+	  board.whiteStones().map((coord) => (
+	    <circle
+	      cx={coord.x * SQUARE_SIZE}
+	      cy={coord.y * SQUARE_SIZE}
+	      r={SQUARE_SIZE / 2}
+	      fill="white"
+	      stroke="black"
+	    />
+	  ))
+	}
+      </>
     </svg>
   );
 };
