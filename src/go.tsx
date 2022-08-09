@@ -41,6 +41,25 @@ export class MutableSituation {
     return this.intersections[coord.y][coord.x];
   }
 
+  vertices(): Array<Coord> {
+    const result: Array<Coord> = [];
+    const {w, h} = this.size;
+    for (let y = 0; y < h; y++) {
+      for (let x = 0; x < w; x++) {
+	result.push({x, y});
+      }
+    }
+    return result;
+  }
+
+  blackStones(): Array<Coord> {
+    return this.vertices().filter(coord => this.get(coord) === "black");
+  }
+
+  whiteStones(): Array<Coord> {
+    return this.vertices().filter(coord => this.get(coord) === "white");
+  }
+
   set(coord: Coord, color: Color) {
     this.intersections[coord.y][coord.x] = color;
   }
@@ -60,7 +79,7 @@ export class MutableSituation {
     const result: Array<Coord> = [coord];
     while (queue.length) {
       for (const nb of this.neighbors(queue.pop())) {
-	nbKey = coordKey(nb);
+	const nbKey = coordKey(nb);
 	if (!keys.has(nbKey) && this.get(nb) === color) {
 	  result.push(nb);
 	  queue.push(nb);
@@ -72,11 +91,11 @@ export class MutableSituation {
   }
 
   liberties(group: Array<Coord>): Array<Coord> {
-    const keys: Set<string> = new Set([coordKey(coord)]);
-    const result: Array<Coord> = [coord];
+    const keys: Set<string> = new Set();
+    const result: Array<Coord> = [];
     for (const stone of group) {
       for (const nb of this.neighbors(stone)) {
-	nbKey = coordKey(nb);
+	const nbKey = coordKey(nb);
 	if (!keys.has(nbKey) && this.get(nb) === "empty") {
 	  result.push(nb);
 	  keys.add(nbKey);
@@ -86,13 +105,13 @@ export class MutableSituation {
     return result;
   }
 
-  const captureGroup(stones: Array<Coord>) {
+  captureGroup(stones: Array<Coord>) {
       for (const capturedStone of stones) {
 	this.set(capturedStone, "empty");
       }
   }
 
-  const playStone(coord: Coord, color: Color) {
+  playStone(coord: Coord, color: Color) {
     const opponent = oppositeColor(color);
     // TODO: check empty and not ko
     this.set(coord, color);
@@ -100,7 +119,7 @@ export class MutableSituation {
     this.ko = null;
     // Capture opponent stones
     const captures: Array<Coord> = [];
-    for (const nb of this.neighbors(stone)) {
+    for (const nb of this.neighbors(coord)) {
       if (this.get(nb) == opponent) {
 	const opponentGroup: Array<Coord> = this.group(nb);
 	if (!this.liberties(opponentGroup).length) {

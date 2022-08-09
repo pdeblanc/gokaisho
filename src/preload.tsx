@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { createRoot } from 'react-dom/client';
 import Goban from "./Goban";
 import fs from "fs";
-import { MutableSituation } from "./go";
+import { gameStart } from "./go";
 const SgfParser = require('ts-sgf-parser').SgfParser;  // using import syntax raises error TS2309??
 
 const SGF_PATH = "/Users/peter/repos/miai/game01__miai_values_tromp.sgf"
@@ -18,9 +18,11 @@ window.main = function() {
     const parser = new SgfParser(data);
     console.log(parser.getMainLine())
   });
+  const board = gameStart({w: 19, h: 19});
+  board.playStone({x: 16, y: 3}, "black");
   // render stuff
   createRoot(document.getElementById("react-root")).render(
-    <Goban />,
+    <Goban board={board} />,
   );
 };
 
