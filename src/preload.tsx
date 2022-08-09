@@ -20,6 +20,7 @@ window.main = function() {
   });
   const board = gameStart({w: 19, h: 19});
   board.playStone({x: 16, y: 3}, "black");
+  board.playStone({x: 3, y: 3}, "white");
   // render stuff
   createRoot(document.getElementById("react-root")).render(
     <Goban board={board} />,
