@@ -3,13 +3,40 @@
 // Should ko intersections specify which player is not allowed to go there?
 // Should I use strings for coordinates? That would simplify maps and sets.
 
+export interface SgfMove {
+  player: "B" | "W";
+  coords: string;
+}
+
+const sgfAlphabet = "abcdefghijklmnopqrs";
+
 export type Color = "black" | "white" | "empty";
+export type PlayerColor = "black" | "white";
 
 export type Coord = {x: number, y: number};
 
-export type Move = Coord | "pass";
+export type Move = {
+  player: PlayerColor,
+  value: Coord | "pass"
+}
 
 export type BoardSize = {w: number, h: number};
+
+const parseSgfColor = (sgfColor: string): PlayerColor => {
+  if (sgfColor === "B") return "black";
+  if (sgfColor === "W") return "white";
+  throw new Error(`Invalid SGF color "${sgfColor}"`);
+}
+
+export const sgfMoveToMove = (sgfMove: SgfMove): Move => {
+  const {coords} = sgfMove;
+  const player = parseSgfColor(sgfMove.player);
+  const value = coords === "" ? "pass" : {
+    x: sgfAlphabet.indexOf(coords[0]),
+    y: sgfAlphabet.indexOf(coords[1]),
+  };
+  return {player, value};
+}
 
 const coordKey = (coord: Coord): string => `${coord.x}-${coord.y}`;
 
@@ -111,6 +138,16 @@ export class MutableSituation {
       }
   }
 
+  playMove(move: Move) {
+    const {player, value} = move;
+    if (value === "pass") {
+      this.turn = oppositeColor(player);
+      this.ko = null;
+    } else {
+      this.playStone(value, player);
+    }
+  }
+
   playStone(coord: Coord, color: Color) {
     const opponent = oppositeColor(color);
     // TODO: check empty and not ko
@@ -124,8 +161,8 @@ export class MutableSituation {
 	const opponentGroup: Array<Coord> = this.group(nb);
 	if (!this.liberties(opponentGroup).length) {
 	  captures.concat(opponentGroup);
+	  this.captureGroup(opponentGroup);
 	}
-	this.captureGroup(opponentGroup);
       }
     }
     // Check for suicide
