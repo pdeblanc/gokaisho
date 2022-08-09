@@ -1,10 +1,15 @@
 import React, { Component } from 'react';
 import { range } from "./util";
+import { MutableSituation } from "./go";
 
 const BOARD_SIZE = 19;
 const SQUARE_SIZE = 16;
 
-const Goban = () => {
+type GobanProps = {
+  board: MutableSituation;
+};
+
+const Goban: React.FC<GobanProps> = ({board}) => {
   const boxMin = -SQUARE_SIZE / 2;
   const boxSize = BOARD_SIZE * SQUARE_SIZE;
   return (
@@ -37,6 +42,18 @@ const Goban = () => {
 	      y2={v * SQUARE_SIZE}
 	      stroke="black"
 	      key={v}
+	    />
+	  ))
+	}
+      </>
+      <>
+	{
+	  board.blackStones().map((coord) => (
+	    <circle
+	      cx={coord.x * SQUARE_SIZE}
+	      cy={coord.y * SQUARE_SIZE}
+	      r={SQUARE_SIZE / 2}
+	      fill="black"
 	    />
 	  ))
 	}
