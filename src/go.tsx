@@ -160,7 +160,7 @@ export class MutableSituation {
       if (this.get(nb) == opponent) {
 	const opponentGroup: Array<Coord> = this.group(nb);
 	if (!this.liberties(opponentGroup).length) {
-	  captures.concat(opponentGroup);
+	  captures.push(...opponentGroup);
 	  this.captureGroup(opponentGroup);
 	}
       }

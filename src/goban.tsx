@@ -95,6 +95,18 @@ const Goban: React.FC<GobanProps> = ({board}) => {
 	  ))
 	}
       </>
+      <>
+	{
+	  board.ko && <rect
+	    x={(board.ko.x - 1/4) * SQUARE_SIZE}
+	    y={(board.ko.y - 1/4) * SQUARE_SIZE}
+	    width={1/2 * SQUARE_SIZE}
+	    height={1/2 * SQUARE_SIZE}
+	    stroke="black"
+	    fill="none"
+	  />
+	}
+      </>
     </svg>
   );
 };
