@@ -66,6 +66,7 @@ const Goban: React.FC<GobanProps> = ({board}) => {
 	      cy={coord.y * SQUARE_SIZE}
 	      r={SQUARE_SIZE / 8}
 	      fill="black"
+	      key={`hoshi_${coord.x}_${coord.y}`}
 	    />
 	  ))
 	}
@@ -78,6 +79,7 @@ const Goban: React.FC<GobanProps> = ({board}) => {
 	      cy={coord.y * SQUARE_SIZE}
 	      r={SQUARE_SIZE / 2 - 0.25}
 	      fill="black"
+	      key={`${coord.x}_${coord.y}`}
 	    />
 	  ))
 	}
@@ -91,6 +93,7 @@ const Goban: React.FC<GobanProps> = ({board}) => {
 	      r={SQUARE_SIZE / 2 - 0.25}
 	      fill="white"
 	      stroke="black"
+	      key={`${coord.x}_${coord.y}`}
 	    />
 	  ))
 	}
