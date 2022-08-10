@@ -129,11 +129,18 @@ export class BaseSituation {
   }
 }
 
+export class ImmutableSituation extends BaseSituation {
+};
+
 export class MutableSituation extends BaseSituation {
-  size: BoardSize;
-  intersections: Array<Array<Color>>;
-  turn: Color;
-  ko: Coord | null;
+  freeze(): ImmutableSituation {
+    return new ImmutableSituation(
+      this.size,
+      this.intersections.map(row => [...row]),
+      this.turn,
+      this.ko,
+    );
+  }
 
   set(coord: Coord, color: Color) {
     this.intersections[coord.y][coord.x] = color;
@@ -145,17 +152,19 @@ export class MutableSituation extends BaseSituation {
       }
   }
 
-  playMove(move: Move) {
+  playMove(move: Move): Array<Coord> {
+    // return captures
     const {player, value} = move;
     if (value === "pass") {
       this.turn = oppositeColor(player);
       this.ko = null;
     } else {
-      this.playStone(value, player);
+      return this.playStone(value, player);
     }
   }
 
-  playStone(coord: Coord, color: Color) {
+  playStone(coord: Coord, color: Color): Array<Coord> {
+    // return captures
     const opponent = oppositeColor(color);
     // TODO: check empty and not ko
     this.set(coord, color);
@@ -188,6 +197,7 @@ export class MutableSituation extends BaseSituation {
     }
     // Set turn state
     this.turn = opponent;
+    return captures;
   }
 }
 
