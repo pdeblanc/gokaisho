@@ -22,6 +22,14 @@ type GobanSurfaceProps = {
 const GobanSurface: React.FC<GobanSurfaceProps> = () => {
   return (
     <>
+      <rect
+	x={-SQUARE_SIZE / 2}
+	y={-SQUARE_SIZE / 2}
+	width={BOARD_SIZE * SQUARE_SIZE+ 4}
+	height={BOARD_SIZE * SQUARE_SIZE + 4}
+	stroke="none"
+	fill="#ea1"
+      />
       <>
 	{
 	  range(0, BOARD_SIZE).map(u => (
