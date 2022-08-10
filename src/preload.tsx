@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { createRoot } from 'react-dom/client';
-import Goban from "./Goban";
+import Goban from "./goban/goban";
 import { readFile } from "node:fs/promises";
 import { gameStart, sgfMoveToMove } from "./go";
 import { loadMiaiValueSgfs } from "./library";
