@@ -24,6 +24,9 @@ window.main = function() {
 	const move2 = sgfMoveToMove(move);
 	board.playMove(move2);
       }
+      if (board.ko) {
+	break;
+      }
     }
     createRoot(document.getElementById("react-root")).render(
       <Goban board={board} />,
