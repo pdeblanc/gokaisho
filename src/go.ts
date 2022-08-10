@@ -46,7 +46,7 @@ const oppositeColor = (color: Color): Color => {
   return "empty";
 };
 
-export class MutableSituation {
+export class BaseSituation {
   size: BoardSize;
   intersections: Array<Array<Color>>;
   turn: Color;
@@ -85,10 +85,6 @@ export class MutableSituation {
 
   whiteStones(): Array<Coord> {
     return this.vertices().filter(coord => this.get(coord) === "white");
-  }
-
-  set(coord: Coord, color: Color) {
-    this.intersections[coord.y][coord.x] = color;
   }
 
   neighbors(coord: Coord): Array<Coord> {
@@ -130,6 +126,17 @@ export class MutableSituation {
       }
     }
     return result;
+  }
+}
+
+export class MutableSituation extends BaseSituation {
+  size: BoardSize;
+  intersections: Array<Array<Color>>;
+  turn: Color;
+  ko: Coord | null;
+
+  set(coord: Coord, color: Color) {
+    this.intersections[coord.y][coord.x] = color;
   }
 
   captureGroup(stones: Array<Coord>) {
