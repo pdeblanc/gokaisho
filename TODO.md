@@ -1,9 +1,8 @@
 TODO:
 
-- Create (placeholder) miai value dataset
-- Load miai values from SGF comments
 - Create miai value quiz component
 - Save quiz answers to file
+- Create a tree of board positions from an sgf
 
 
 Study topics:
