@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { range } from "./util";
-import { MutableSituation } from "./go";
+import { ImmutableSituation } from "./go";
 
 const BOARD_SIZE = 19;
 const SQUARE_SIZE = 16;
@@ -18,7 +18,7 @@ const HOSHI = [
 ];
 
 type GobanProps = {
-  board: MutableSituation;
+  board: ImmutableSituation;
 };
 
 const Goban: React.FC<GobanProps> = ({board}) => {

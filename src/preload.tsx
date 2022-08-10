@@ -32,7 +32,7 @@ window.main = async function() {
     }
   }
   createRoot(document.getElementById("react-root")).render(
-    <Goban board={board} />,
+    <Goban board={board.freeze()} />,
   );
 };
 
