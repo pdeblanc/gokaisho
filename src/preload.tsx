@@ -1,12 +1,7 @@
 import React, { Component } from 'react';
 import { createRoot } from 'react-dom/client';
 import Goban from "./goban/goban";
-import { readFile } from "node:fs/promises";
-import { gameStart, sgfMoveToMove } from "./go";
 import { loadMiaiValueSgfs } from "./library";
-const SgfParser = require('ts-sgf-parser').SgfParser;  // using import syntax raises error TS2309??
-
-const SGF_PATH = "/Users/peter/repos/miai/game01__miai_values_tromp.sgf"
 
 declare global {
     interface Window { main: any; }
@@ -14,25 +9,11 @@ declare global {
 
 window.main = async function() {
   // load a file
-  const foo = await loadMiaiValueSgfs();
-  console.log("foo", foo);
-  const data = await readFile(SGF_PATH, "utf8");
-  const board = gameStart({w: 19, h: 19});
-  const parser = new SgfParser(data);
-  const lines = parser.getMainLine();
-  const mainLine = lines[0];
-  const moveNodes = mainLine.nodes;
-  for (const {move} of moveNodes) {
-    if (move) {
-      const move2 = sgfMoveToMove(move);
-      board.playMove(move2);
-    }
-    if (board.ko) {
-      break;
-    }
-  }
+  const problems = await loadMiaiValueSgfs();
+  const example = problems[Math.floor(Math.random() * problems.length)];
+  console.log({example});
   createRoot(document.getElementById("react-root")).render(
-    <Goban board={board.freeze()} />,
+    <Goban board={example.board} lastMove={example.move} />,
   );
 };
 

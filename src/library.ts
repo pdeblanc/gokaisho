@@ -46,7 +46,6 @@ async function loadMiaiValuesFromFile(path: string) {
     const captures = board.playMove(_move);
     const comment = getComment(moveNode);
     const miaiValue = getMiaiValueFromComment(comment);
-    console.log({moveNode, i, comment, miaiValue});
     if (miaiValue === null) continue;
     if (miaiValue >= leastValue) continue;
     if (miaiValue < 0) break;

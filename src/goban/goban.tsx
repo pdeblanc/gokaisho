@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { range } from "../util";
-import { ImmutableSituation } from "../go";
+import { ImmutableSituation, Move } from "../go";
 import GobanSvg from "./goban_svg";
 import GobanSurface from "./goban_surface";
 
@@ -9,9 +9,10 @@ const SQUARE_SIZE = 16;
 
 type GobanProps = {
   board: ImmutableSituation;
+  lastMove: Move | null;
 };
 
-const Goban: React.FC<GobanProps> = ({board}) => {
+const Goban: React.FC<GobanProps> = ({board, lastMove}) => {
   return (
     <GobanSvg>
       <GobanSurface />
@@ -42,18 +43,26 @@ const Goban: React.FC<GobanProps> = ({board}) => {
 	  ))
 	}
       </>
-      <>
-	{
-	  board.ko && <rect
-	    x={(board.ko.x - 1/4) * SQUARE_SIZE}
-	    y={(board.ko.y - 1/4) * SQUARE_SIZE}
-	    width={1/2 * SQUARE_SIZE}
-	    height={1/2 * SQUARE_SIZE}
-	    stroke="black"
-	    fill="none"
-	  />
-	}
-      </>
+      {
+	board.ko && <rect
+	  x={(board.ko.x - 1/4) * SQUARE_SIZE}
+	  y={(board.ko.y - 1/4) * SQUARE_SIZE}
+	  width={1/2 * SQUARE_SIZE}
+	  height={1/2 * SQUARE_SIZE}
+	  stroke="black"
+	  fill="none"
+	/>
+      }
+      {
+	lastMove && lastMove.value !== "pass" &&
+	<text
+	  x={lastMove.value.x * SQUARE_SIZE}
+	  y={lastMove.value.y * SQUARE_SIZE + 3}
+	  fontSize={8}
+	  textAnchor="middle"
+	  stroke={lastMove.player === "white" ? "black" : "white"}
+	>1</text>
+      }
     </GobanSvg>
   );
 };
