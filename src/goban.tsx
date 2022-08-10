@@ -22,8 +22,8 @@ type GobanProps = {
 };
 
 const Goban: React.FC<GobanProps> = ({board}) => {
-  const boxMin = -SQUARE_SIZE / 2;
-  const boxSize = BOARD_SIZE * SQUARE_SIZE;
+  const boxMin = -SQUARE_SIZE / 2 - 2;
+  const boxSize = BOARD_SIZE * SQUARE_SIZE + 4;
   return (
     <svg
       width="500"
@@ -76,7 +76,7 @@ const Goban: React.FC<GobanProps> = ({board}) => {
 	    <circle
 	      cx={coord.x * SQUARE_SIZE}
 	      cy={coord.y * SQUARE_SIZE}
-	      r={SQUARE_SIZE / 2}
+	      r={SQUARE_SIZE / 2 - 0.25}
 	      fill="black"
 	    />
 	  ))
@@ -88,7 +88,7 @@ const Goban: React.FC<GobanProps> = ({board}) => {
 	    <circle
 	      cx={coord.x * SQUARE_SIZE}
 	      cy={coord.y * SQUARE_SIZE}
-	      r={SQUARE_SIZE / 2}
+	      r={SQUARE_SIZE / 2 - 0.25}
 	      fill="white"
 	      stroke="black"
 	    />
