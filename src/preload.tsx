@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { createRoot } from 'react-dom/client';
 import Goban from "./goban/goban";
 import { loadMiaiValueSgfs } from "./library";
-import { randomSymmetry } from "./coord";
+import { randomSymmetry, transformJaCoord } from "./coord";
 import { transformMove } from "./go";
 
 declare global {
@@ -11,7 +11,7 @@ declare global {
 
 window.main = async function() {
   // load a file
-  const problems = await loadMiaiValueSgfs();
+  const problems = (await loadMiaiValueSgfs()).filter(p => p.captures.length);
   // choose example
   const example = problems[Math.floor(Math.random() * problems.length)];
   console.log({example});
@@ -21,7 +21,9 @@ window.main = async function() {
   // rotate example
   const rotatedExample = {
     board: example.board.transform(symmetry),
-    captures: example.captures,  // TODO
+    captures: example.captures.map(
+      stone => transformJaCoord(example.board.size, symmetry, stone)
+    ),
     miaiValue: example.miaiValue,
     move: transformMove(example.board.size, symmetry, example.move),
     moveNo: example.moveNo,
@@ -30,8 +32,16 @@ window.main = async function() {
   console.log(rotatedExample);
   createRoot(document.getElementById("react-root")).render(
     <>
-      <Goban board={example.board} lastMove={example.move} />
-      <Goban board={rotatedExample.board} lastMove={rotatedExample.move} />
+      <Goban
+	board={example.board}
+	lastMove={example.move}
+	justCaptured={example.captures}
+      />
+      <Goban
+	board={rotatedExample.board}
+	lastMove={rotatedExample.move}
+	justCaptured={rotatedExample.captures}
+      />
     </>
   );
 };

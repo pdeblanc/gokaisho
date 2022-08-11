@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { range } from "../util";
 import { ImmutableSituation, Move } from "../go";
-import { jaCoordToXyCoord } from "../coord";
+import { jaCoordToXyCoord, JaCoord } from "../coord";
 import GobanSvg from "./goban_svg";
 import GobanSurface from "./goban_surface";
 
@@ -11,9 +11,10 @@ const SQUARE_SIZE = 16;
 type GobanProps = {
   board: ImmutableSituation;
   lastMove: Move | null;
+  justCaptured: Array<JaCoord>;
 };
 
-const Goban: React.FC<GobanProps> = ({board, lastMove}) => {
+const Goban: React.FC<GobanProps> = ({board, justCaptured, lastMove}) => {
   const koXy = board.ko && jaCoordToXyCoord(board.ko);
   return (
     <GobanSvg>
@@ -29,6 +30,33 @@ const Goban: React.FC<GobanProps> = ({board, lastMove}) => {
 	      fill="black"
 	      key={`${x}_${y}`}
 	    />
+	  })
+	}
+      </>
+      <>
+	{
+	  justCaptured && justCaptured.map((coord) => {
+	    const {x, y} = jaCoordToXyCoord(coord);
+	    return (
+	      <>
+		<circle
+		  cx={x * SQUARE_SIZE}
+		  cy={y * SQUARE_SIZE}
+		  r={SQUARE_SIZE / 2 - 0.25}
+		  fill={board.turn}
+		  stroke={board.turn === "white" ? "black" : "none"}
+		  opacity="0.5"
+		/>
+		<circle
+		  cx={x * SQUARE_SIZE}
+		  cy={y * SQUARE_SIZE}
+		  r={SQUARE_SIZE / 4}
+		  fill="none"
+		  stroke="red"
+		  opacity="0.5"
+		/>
+	      </>
+	    )
 	  })
 	}
       </>
