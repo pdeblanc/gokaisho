@@ -175,7 +175,7 @@ export class MutableSituation extends BaseSituation {
     stones.forEach(stone => this.set(stone, "empty"));
   }
 
-  playMove(move: Move): Set<JaCoord> {
+  playMove(move: Move): Array<JaCoord> {
     // return captures
     const {player, value} = move;
     if (value === "pass") {
@@ -186,7 +186,7 @@ export class MutableSituation extends BaseSituation {
     }
   }
 
-  playStone(coord: JaCoord, color: Color): Set<JaCoord> {
+  playStone(coord: JaCoord, color: Color): Array<JaCoord> {
     // return captures
     const opponent = oppositeColor(color);
     // TODO: check empty and not ko
@@ -221,7 +221,7 @@ export class MutableSituation extends BaseSituation {
     }
     // Set turn state
     this.turn = opponent;
-    return captures;
+    return Array.from(captures);
   }
 }
 

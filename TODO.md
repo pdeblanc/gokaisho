@@ -24,6 +24,8 @@ Game variants:
 - Gambling
 - Just the opening
 - Just the endgame
+- Blitz
+- Pair go
 
 Play styles:
 - Modern AI style
@@ -57,6 +59,12 @@ Character profiles:
 - Owner's friend
 - Regular player 1
 - Regular player 2
+
+Rooms:
+- Main playing area
+- Back office
+- Onsen
+- Kitchen
 
 NPC leveling:
 NPCs all have a given initial strength and a final target strength.
