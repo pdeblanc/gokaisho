@@ -133,7 +133,7 @@ export class BaseSituation {
 
   liberties(group: Set<JaCoord>): Set<JaCoord> {
     const result: Set<JaCoord> = new Set();
-    group.forEach(stone => this.neighbors(stone).forEach(nb => result.add(nb)));
+    group.forEach(stone => this.neighbors(stone).forEach(nb => this.get(nb) === "empty" && result.add(nb)));
     return result;
   }
 }
