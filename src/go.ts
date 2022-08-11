@@ -3,6 +3,8 @@
 // Should ko intersections specify which player is not allowed to go there?
 // Should I use strings for coordinates? That would simplify maps and sets.
 
+import { XyCoord } from "./coord";
+
 export interface SgfMove {
   player: "B" | "W";
   coords: string;
@@ -13,11 +15,9 @@ const sgfAlphabet = "abcdefghijklmnopqrs";
 export type Color = "black" | "white" | "empty";
 export type PlayerColor = "black" | "white";
 
-export type Coord = {x: number, y: number};
-
 export type Move = {
   player: PlayerColor,
-  value: Coord | "pass"
+  value: XyCoord | "pass"
 }
 
 export type BoardSize = {w: number, h: number};
@@ -38,7 +38,7 @@ export const sgfMoveToMove = (sgfMove: SgfMove): Move => {
   return {player, value};
 }
 
-const coordKey = (coord: Coord): string => `${coord.x}-${coord.y}`;
+const coordKey = (coord: XyCoord): string => `${coord.x}-${coord.y}`;
 
 const oppositeColor = (color: Color): Color => {
   if (color == "black") return "white";
@@ -50,13 +50,13 @@ export class BaseSituation {
   size: BoardSize;
   intersections: Array<Array<Color>>;
   turn: Color;
-  ko: Coord | null;
+  ko: XyCoord | null;
 
   constructor(
     size: BoardSize,
     intersections: Array<Array<Color>>,
     turn: Color,
-    ko: Coord | null
+    ko: XyCoord | null
   ) {
     this.size = size;
     this.intersections = intersections;
@@ -64,12 +64,12 @@ export class BaseSituation {
     this.ko = ko;
   }
 
-  get(coord: Coord): Color {
+  get(coord: XyCoord): Color {
     return this.intersections[coord.y][coord.x];
   }
 
-  vertices(): Array<Coord> {
-    const result: Array<Coord> = [];
+  vertices(): Array<XyCoord> {
+    const result: Array<XyCoord> = [];
     const {w, h} = this.size;
     for (let y = 0; y < h; y++) {
       for (let x = 0; x < w; x++) {
@@ -79,15 +79,15 @@ export class BaseSituation {
     return result;
   }
 
-  blackStones(): Array<Coord> {
+  blackStones(): Array<XyCoord> {
     return this.vertices().filter(coord => this.get(coord) === "black");
   }
 
-  whiteStones(): Array<Coord> {
+  whiteStones(): Array<XyCoord> {
     return this.vertices().filter(coord => this.get(coord) === "white");
   }
 
-  neighbors(coord: Coord): Array<Coord> {
+  neighbors(coord: XyCoord): Array<XyCoord> {
     const {x, y} = coord;
     const {w, h} = this.size;
     return [
@@ -95,11 +95,11 @@ export class BaseSituation {
     ].filter(c => c.x >= 0 && c.y >= 0 && c.x < w && c.y < h);
   }
 
-  group(coord: Coord): Array<Coord> {
+  group(coord: XyCoord): Array<XyCoord> {
     const color = this.get(coord);
     const keys: Set<string> = new Set([coordKey(coord)]);
-    const queue: Array<Coord> = [coord];
-    const result: Array<Coord> = [coord];
+    const queue: Array<XyCoord> = [coord];
+    const result: Array<XyCoord> = [coord];
     while (queue.length) {
       for (const nb of this.neighbors(queue.pop())) {
 	const nbKey = coordKey(nb);
@@ -113,9 +113,9 @@ export class BaseSituation {
     return result;
   }
 
-  liberties(group: Array<Coord>): Array<Coord> {
+  liberties(group: Array<XyCoord>): Array<XyCoord> {
     const keys: Set<string> = new Set();
-    const result: Array<Coord> = [];
+    const result: Array<XyCoord> = [];
     for (const stone of group) {
       for (const nb of this.neighbors(stone)) {
 	const nbKey = coordKey(nb);
@@ -142,17 +142,17 @@ export class MutableSituation extends BaseSituation {
     );
   }
 
-  set(coord: Coord, color: Color) {
+  set(coord: XyCoord, color: Color) {
     this.intersections[coord.y][coord.x] = color;
   }
 
-  captureGroup(stones: Array<Coord>) {
+  captureGroup(stones: Array<XyCoord>) {
       for (const capturedStone of stones) {
 	this.set(capturedStone, "empty");
       }
   }
 
-  playMove(move: Move): Array<Coord> {
+  playMove(move: Move): Array<XyCoord> {
     // return captures
     const {player, value} = move;
     if (value === "pass") {
@@ -163,7 +163,7 @@ export class MutableSituation extends BaseSituation {
     }
   }
 
-  playStone(coord: Coord, color: Color): Array<Coord> {
+  playStone(coord: XyCoord, color: Color): Array<XyCoord> {
     // return captures
     const opponent = oppositeColor(color);
     // TODO: check empty and not ko
@@ -171,10 +171,10 @@ export class MutableSituation extends BaseSituation {
     // Remove ko restriction
     this.ko = null;
     // Capture opponent stones
-    const captures: Array<Coord> = [];
+    const captures: Array<XyCoord> = [];
     for (const nb of this.neighbors(coord)) {
       if (this.get(nb) == opponent) {
-	const opponentGroup: Array<Coord> = this.group(nb);
+	const opponentGroup: Array<XyCoord> = this.group(nb);
 	if (!this.liberties(opponentGroup).length) {
 	  captures.push(...opponentGroup);
 	  this.captureGroup(opponentGroup);
