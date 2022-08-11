@@ -1,5 +1,5 @@
 // zero-indexed
-export type xyCoord = {x: number, y: number};
+export type XyCoord = {x: number, y: number};
 
 const kanjiNumbers = [
   "〇",
@@ -28,7 +28,7 @@ type kanjiNumber = typeof kanjiNumbers[number];
 
 export type JaCoord = `${number}の${kanjiNumber}`;
 
-function jaCoordToXyCoord(jaCoord: JaCoord): xyCoord {
+function jaCoordToXyCoord(jaCoord: JaCoord): XyCoord {
   const parts = jaCoord.split("の");
   const x = parseInt(parts[0]) - 1;
   const yKanji = parts[1] as kanjiNumber;
