@@ -1,10 +1,11 @@
 TODO:
 
 - Skip ko positions
-- Create miai value quiz component
+- Proceed to next problem
 - Save quiz answers to file
 - Create a tree of board positions from an sgf
 - Refactor constants in goban components
+- Improve type annotations
 
 
 Study topics:
