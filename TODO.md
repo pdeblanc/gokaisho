@@ -1,5 +1,6 @@
 TODO:
 
+- Skip ko positions
 - Create miai value quiz component
 - Save quiz answers to file
 - Create a tree of board positions from an sgf
