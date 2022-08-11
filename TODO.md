@@ -1,6 +1,5 @@
 TODO:
 
-- Refactor coordinates
 - Rotate board randomly
 - Create miai value quiz component
 - Save quiz answers to file

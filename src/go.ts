@@ -3,7 +3,7 @@
 // Should ko intersections specify which player is not allowed to go there?
 // Should I use strings for coordinates? That would simplify maps and sets.
 
-import { XyCoord } from "./coord";
+import { JaCoord, XyCoord, jaCoordToXyCoord, xyCoordToJaCoord } from "./coord";
 
 export interface SgfMove {
   player: "B" | "W";
@@ -17,7 +17,7 @@ export type PlayerColor = "black" | "white";
 
 export type Move = {
   player: PlayerColor,
-  value: XyCoord | "pass"
+  value: JaCoord | "pass"
 }
 
 export type BoardSize = {w: number, h: number};
@@ -31,14 +31,12 @@ const parseSgfColor = (sgfColor: string): PlayerColor => {
 export const sgfMoveToMove = (sgfMove: SgfMove): Move => {
   const {coords} = sgfMove;
   const player = parseSgfColor(sgfMove.player);
-  const value = coords === "" ? "pass" : {
+  const value = coords === "" ? "pass" : xyCoordToJaCoord({
     x: sgfAlphabet.indexOf(coords[0]),
     y: sgfAlphabet.indexOf(coords[1]),
-  };
+  });
   return {player, value};
 }
-
-const coordKey = (coord: XyCoord): string => `${coord.x}-${coord.y}`;
 
 const oppositeColor = (color: Color): Color => {
   if (color == "black") return "white";
@@ -50,13 +48,13 @@ export class BaseSituation {
   size: BoardSize;
   intersections: Array<Array<Color>>;
   turn: Color;
-  ko: XyCoord | null;
+  ko: JaCoord | null;
 
   constructor(
     size: BoardSize,
     intersections: Array<Array<Color>>,
     turn: Color,
-    ko: XyCoord | null
+    ko: JaCoord | null
   ) {
     this.size = size;
     this.intersections = intersections;
@@ -64,67 +62,56 @@ export class BaseSituation {
     this.ko = ko;
   }
 
-  get(coord: XyCoord): Color {
-    return this.intersections[coord.y][coord.x];
+  get(coord: JaCoord): Color {
+    const {x, y} = jaCoordToXyCoord(coord);
+    return this.intersections[y][x];
   }
 
-  vertices(): Array<XyCoord> {
-    const result: Array<XyCoord> = [];
+  vertices(): Array<JaCoord> {
+    const result: Array<JaCoord> = [];
     const {w, h} = this.size;
     for (let y = 0; y < h; y++) {
       for (let x = 0; x < w; x++) {
-	result.push({x, y});
+	result.push(xyCoordToJaCoord({x, y}));
       }
     }
     return result;
   }
 
-  blackStones(): Array<XyCoord> {
+  blackStones(): Array<JaCoord> {
     return this.vertices().filter(coord => this.get(coord) === "black");
   }
 
-  whiteStones(): Array<XyCoord> {
+  whiteStones(): Array<JaCoord> {
     return this.vertices().filter(coord => this.get(coord) === "white");
   }
 
-  neighbors(coord: XyCoord): Array<XyCoord> {
-    const {x, y} = coord;
+  neighbors(coord: JaCoord): Array<JaCoord> {
+    const {x, y} = jaCoordToXyCoord(coord);
     const {w, h} = this.size;
     return [
       {x: x + 1, y}, {x: x - 1, y}, {x, y: y + 1}, {x, y: y - 1}
-    ].filter(c => c.x >= 0 && c.y >= 0 && c.x < w && c.y < h);
+    ].filter(c => c.x >= 0 && c.y >= 0 && c.x < w && c.y < h).map(xyCoordToJaCoord);
   }
 
-  group(coord: XyCoord): Array<XyCoord> {
+  group(coord: JaCoord): Set<JaCoord> {
     const color = this.get(coord);
-    const keys: Set<string> = new Set([coordKey(coord)]);
-    const queue: Array<XyCoord> = [coord];
-    const result: Array<XyCoord> = [coord];
+    const queue: Array<JaCoord> = [coord];
+    const result: Set<JaCoord> = new Set([coord]);
     while (queue.length) {
       for (const nb of this.neighbors(queue.pop())) {
-	const nbKey = coordKey(nb);
-	if (!keys.has(nbKey) && this.get(nb) === color) {
-	  result.push(nb);
+	if (!result.has(nb) && this.get(nb) === color) {
+	  result.add(nb);
 	  queue.push(nb);
-	  keys.add(nbKey);
 	}
       }
     }
     return result;
   }
 
-  liberties(group: Array<XyCoord>): Array<XyCoord> {
-    const keys: Set<string> = new Set();
-    const result: Array<XyCoord> = [];
-    for (const stone of group) {
-      for (const nb of this.neighbors(stone)) {
-	const nbKey = coordKey(nb);
-	if (!keys.has(nbKey) && this.get(nb) === "empty") {
-	  result.push(nb);
-	  keys.add(nbKey);
-	}
-      }
-    }
+  liberties(group: Set<JaCoord>): Set<JaCoord> {
+    const result: Set<JaCoord> = new Set();
+    group.forEach(stone => this.neighbors(stone).forEach(nb => result.add(nb)));
     return result;
   }
 }
@@ -142,17 +129,16 @@ export class MutableSituation extends BaseSituation {
     );
   }
 
-  set(coord: XyCoord, color: Color) {
-    this.intersections[coord.y][coord.x] = color;
+  set(coord: JaCoord, color: Color) {
+    const {x, y} = jaCoordToXyCoord(coord);
+    this.intersections[y][x] = color;
   }
 
-  captureGroup(stones: Array<XyCoord>) {
-      for (const capturedStone of stones) {
-	this.set(capturedStone, "empty");
-      }
+  captureGroup(stones: Set<JaCoord>) {
+    stones.forEach(stone => this.set(stone, "empty"));
   }
 
-  playMove(move: Move): Array<XyCoord> {
+  playMove(move: Move): Set<JaCoord> {
     // return captures
     const {player, value} = move;
     if (value === "pass") {
@@ -163,7 +149,7 @@ export class MutableSituation extends BaseSituation {
     }
   }
 
-  playStone(coord: XyCoord, color: Color): Array<XyCoord> {
+  playStone(coord: JaCoord, color: Color): Set<JaCoord> {
     // return captures
     const opponent = oppositeColor(color);
     // TODO: check empty and not ko
@@ -171,12 +157,12 @@ export class MutableSituation extends BaseSituation {
     // Remove ko restriction
     this.ko = null;
     // Capture opponent stones
-    const captures: Array<XyCoord> = [];
+    const captures: Set<JaCoord> = new Set();
     for (const nb of this.neighbors(coord)) {
       if (this.get(nb) == opponent) {
-	const opponentGroup: Array<XyCoord> = this.group(nb);
-	if (!this.liberties(opponentGroup).length) {
-	  captures.push(...opponentGroup);
+	const opponentGroup: Set<JaCoord> = this.group(nb);
+	if (!this.liberties(opponentGroup).size) {
+	  opponentGroup.forEach(stone => captures.add(stone));
 	  this.captureGroup(opponentGroup);
 	}
       }
@@ -184,16 +170,17 @@ export class MutableSituation extends BaseSituation {
     // Check for suicide
     const group = this.group(coord);
     const liberties = this.liberties(group);
-    if (!liberties.length) {
+    if (!liberties.size) {
       this.captureGroup(group);  // TODO: forbid suicide in some rule sets
     }
     // Check for simple ko
     if (
-      group.length === 1 &&
-      liberties.length === 1 &&
-      captures.length === 1
+      group.size === 1 &&
+      liberties.size === 1 &&
+      captures.size === 1
     ) {
-      this.ko = liberties[0];
+      liberties.forEach
+      this.ko = liberties.values().next().value;
     }
     // Set turn state
     this.turn = opponent;
