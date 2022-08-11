@@ -11,13 +11,11 @@ declare global {
 
 window.main = async function() {
   // load a file
-  const problems = (await loadMiaiValueSgfs()).filter(p => p.captures.length);
+  const problems = await loadMiaiValueSgfs();
   // choose example
   const example = problems[Math.floor(Math.random() * problems.length)];
-  console.log({example});
   // choose rotation
   const symmetry = randomSymmetry();
-  console.log(symmetry);
   // rotate example
   const rotatedExample = {
     board: example.board.transform(symmetry),
@@ -28,21 +26,15 @@ window.main = async function() {
     move: transformMove(example.board.size, symmetry, example.move),
     moveNo: example.moveNo,
     path: example.path,
+    symmetry,
   }
   console.log(rotatedExample);
   createRoot(document.getElementById("react-root")).render(
-    <>
-      <Goban
-	board={example.board}
-	lastMove={example.move}
-	justCaptured={example.captures}
-      />
-      <Goban
-	board={rotatedExample.board}
-	lastMove={rotatedExample.move}
-	justCaptured={rotatedExample.captures}
-      />
-    </>
+    <Goban
+      board={rotatedExample.board}
+      lastMove={rotatedExample.move}
+      justCaptured={rotatedExample.captures}
+    />
   );
 };
 
