@@ -3,7 +3,16 @@
 // Should ko intersections specify which player is not allowed to go there?
 // Should I use strings for coordinates? That would simplify maps and sets.
 
-import { JaCoord, XyCoord, jaCoordToXyCoord, xyCoordToJaCoord } from "./coord";
+import {
+  JaCoord,
+  XyCoord,
+  jaCoordToXyCoord,
+  xyCoordToJaCoord,
+  transformJaCoord,
+  transformXyCoord,
+  Symmetry,
+  symmetries,
+} from "./coord";
 
 export interface SgfMove {
   player: "B" | "W";
@@ -117,6 +126,21 @@ export class BaseSituation {
 }
 
 export class ImmutableSituation extends BaseSituation {
+  transform(symmetry: Symmetry): ImmutableSituation {
+    const {flip, rotate} = symmetries[symmetry];
+    const size = rotate % 2 ? {w: this.size.h, h: this.size.w} : this.size;
+    const intersections = gameStart(size).intersections;
+    for (let v = 0; v < size.h; v++) {
+      for (let u = 0; u < size.w; u++) {
+	const {x, y} = transformXyCoord(this.size, symmetry, {x: u, y: v});
+	intersections[y][x] = this.intersections[v][u];
+      }
+    }
+    const ko = this.ko === null ? null : transformJaCoord(
+      this.size, symmetry, this.ko
+    );
+    return new ImmutableSituation(size, intersections, this.turn, ko);
+  }
 };
 
 export class MutableSituation extends BaseSituation {

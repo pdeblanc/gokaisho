@@ -4,7 +4,7 @@ export type XyCoord = {x: number, y: number};
 export type BoardSize = {w: number, h: number};
 
 // flip first, then rotate
-const symmetries = {
+export const symmetries = {
   'p→p': {flip: false, rotate: 0},
   'p→ᓀ': {flip: false, rotate: 1},
   'p→d': {flip: false, rotate: 2},
@@ -15,11 +15,9 @@ const symmetries = {
   'p→ᓂ': {flip: true, rotate: 3}
 } as const;
 
-type Symmetry = keyof typeof symmetries;
+export type Symmetry = keyof typeof symmetries;
 
-// (16, 3) -> 15, 16)
-
-function transformXyCoord(
+export function transformXyCoord(
   boardSize: BoardSize,
   symmetry: Symmetry,
   coord: XyCoord
@@ -32,6 +30,17 @@ function transformXyCoord(
   }
   return {x, y};
 }
+
+export function transformJaCoord(
+  boardSize: BoardSize,
+  symmetry: Symmetry,
+  coord: JaCoord
+): JaCoord {
+  const xyCoord = jaCoordToXyCoord(coord);
+  const newXyCoord = transformXyCoord(boardSize, symmetry, xyCoord);
+  return xyCoordToJaCoord(newXyCoord);
+}
+
 
 const kanjiNumbers = [
   "〇",
