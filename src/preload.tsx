@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import { createRoot } from 'react-dom/client';
 import Goban from "./goban/goban";
 import { loadMiaiValueSgfs } from "./library";
+import { randomSymmetry } from "./coord";
+import { transformMove } from "./go";
 
 declare global {
     interface Window { main: any; }
@@ -10,10 +12,27 @@ declare global {
 window.main = async function() {
   // load a file
   const problems = await loadMiaiValueSgfs();
+  // choose example
   const example = problems[Math.floor(Math.random() * problems.length)];
   console.log({example});
+  // choose rotation
+  const symmetry = randomSymmetry();
+  console.log(symmetry);
+  // rotate example
+  const rotatedExample = {
+    board: example.board.transform(symmetry),
+    captures: example.captures,  // TODO
+    miaiValue: example.miaiValue,
+    move: transformMove(example.board.size, symmetry, example.move),
+    moveNo: example.moveNo,
+    path: example.path,
+  }
+  console.log(rotatedExample);
   createRoot(document.getElementById("react-root")).render(
-    <Goban board={example.board} lastMove={example.move} />,
+    <>
+      <Goban board={example.board} lastMove={example.move} />
+      <Goban board={rotatedExample.board} lastMove={rotatedExample.move} />
+    </>
   );
 };
 

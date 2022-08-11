@@ -17,6 +17,11 @@ export const symmetries = {
 
 export type Symmetry = keyof typeof symmetries;
 
+export function randomSymmetry(): Symmetry {
+  const keys: Array<Symmetry> = Object.keys(symmetries) as Array<Symmetry>;
+  return keys[Math.floor(Math.random() * keys.length)];
+}
+
 export function transformXyCoord(
   boardSize: BoardSize,
   symmetry: Symmetry,
@@ -79,5 +84,5 @@ export function jaCoordToXyCoord(jaCoord: JaCoord): XyCoord {
 
 export function xyCoordToJaCoord(xyCoord: XyCoord): JaCoord {
   const {x, y} = xyCoord;
-  return `${x}の${kanjiNumbers[y + 1]}`
+  return `${x + 1}の${kanjiNumbers[y + 1]}`
 }

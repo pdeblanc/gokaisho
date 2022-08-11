@@ -29,6 +29,19 @@ export type Move = {
   value: JaCoord | "pass"
 }
 
+export function transformMove(
+  boardSize: BoardSize,
+  symmetry: Symmetry,
+  move: Move
+): Move {
+  const {player, value} = move;
+  if (value === "pass") return move;
+  return {
+    player,
+    value: transformJaCoord(boardSize, symmetry, value)
+  };
+}
+
 export type BoardSize = {w: number, h: number};
 
 const parseSgfColor = (sgfColor: string): PlayerColor => {
