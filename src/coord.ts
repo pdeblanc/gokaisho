@@ -28,8 +28,9 @@ function transformXyCoord(
   const {flip, rotate} = symmetries[symmetry];
   if (flip) x = boardSize.w - x - 1;
   for (let i = 0; i < rotate; i++) {
-    [x, y] = [board.h - y - 1, x];
+    [x, y] = [boardSize.h - y - 1, x];
   }
+  return {x, y};
 }
 
 const kanjiNumbers = [
@@ -59,10 +60,15 @@ type KanjiNumber = typeof kanjiNumbers[number];
 
 export type JaCoord = `${number}の${KanjiNumber}`;
 
-function jaCoordToXyCoord(jaCoord: JaCoord): XyCoord {
+export function jaCoordToXyCoord(jaCoord: JaCoord): XyCoord {
   const parts = jaCoord.split("の");
   const x = parseInt(parts[0]) - 1;
   const yKanji = parts[1] as KanjiNumber;
   const y = kanjiNumbers.indexOf(yKanji) - 1;
   return {x, y};
+}
+
+export function xyCoordToJaCoord(xyCoord: XyCoord): JaCoord {
+  const {x, y} = xyCoord;
+  return `${x}の${kanjiNumbers[y + 1]}`
 }
