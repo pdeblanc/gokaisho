@@ -15,12 +15,14 @@ Note that miai values tend to be about 1/2 of deiri values, which may be more fa
 
 Examples:
 
+```
 Move                                                 Deiri value    Miai value
 Fill dame                                            0              0
 Surround 1 point of territory                        1              0.5
 Surround a stone, thus gaining 1 point of territory  2              1
 Gain 1 territory while reducing opp. territory by 1  2              1
 Play the first move of the game at 3-4               ~26            ~13 (6.5 komi times 2)
+```
 
 In this application the miai is desired. Please be careful.
 
