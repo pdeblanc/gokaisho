@@ -1,10 +1,20 @@
-TODO:
-
+Tasks concerning the miai value study app as it exists today:
 - Skip ko positions
-- Filter out already-studied problems
+- Figure out how to package SGF files
+- Write README
 - Create a tree of board positions from an sgf
 - Refactor constants in goban components
 - Improve type annotations
+
+
+
+The rest of this document is for more long-term plans.
+Gokaisho (碁会所) should eventually be a fully-featured study app and game.
+It will recreate the experience of playing in a Go club, with an explorable
+environment populated by virtual characters who play and study Go.
+
+Note this is not intended to be an online game. Gokaisho will run locally
+and all opponents will be powered by AI running on the user's computer.
 
 
 Study topics:
