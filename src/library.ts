@@ -4,7 +4,7 @@ const SgfParser = require('ts-sgf-parser').SgfParser;
 import { gameStart, sgfMoveToMove } from "./go";
 
 // TODO: Make this more portable
-const LIBRARY_ROOT = "/Users/peter/gokaisho-local";
+const LIBRARY_ROOT = path.join(path.dirname(__dirname), "data");
 const MIAI_DIR = "miai_value_sgfs";
 const ATTEMPTS_FILE = "attempts.jsonl";
 
@@ -92,10 +92,10 @@ async function loadMiaiValuesFromFile(path: string) {
 }
 
 export async function loadMiaiValueSgfs() {
-  console.log("__dirname", __dirname);
   // list already attempted problems
   const attemptKeys = await loadAttempts();
   console.log("attempted", attemptKeys);
+  console.log("library root", LIBRARY_ROOT);
   const dirContents = await readdir(LIBRARY_ROOT);
   if (!dirContents.includes(MIAI_DIR)) {
     return [];
