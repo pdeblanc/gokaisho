@@ -38,7 +38,12 @@ export function saveAttempt(attempt: any) {
 
 async function loadAttempts() {
   const attemptFilePath = path.join(LIBRARY_ROOT, ATTEMPTS_FILE);
-  const data = await readFile(attemptFilePath, "utf8");
+  let data = "";
+  try {
+    data = await readFile(attemptFilePath, "utf8");
+  } catch (error) {
+    return {};
+  }
   const lines = data.split("\n").map(line => line.trim()).filter(line => line);
   const entries = lines.map(line => JSON.parse(line));
   const attemptKeys: any = {};
