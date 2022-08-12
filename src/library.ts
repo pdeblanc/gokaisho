@@ -1,4 +1,4 @@
-import { readdir, readFile } from "node:fs/promises";
+import { readdir, readFile, appendFile } from "node:fs/promises";
 import path from "node:path";
 const SgfParser = require('ts-sgf-parser').SgfParser;
 import { gameStart, sgfMoveToMove } from "./go";
@@ -6,6 +6,7 @@ import { gameStart, sgfMoveToMove } from "./go";
 // TODO: Make this more portable
 const LIBRARY_ROOT = "/Users/peter/gokaisho-local";
 const MIAI_DIR = "miai_value_sgfs";
+const ATTEMPTS_FILE = "attempts.jsonl";
 
 function getComment(moveNode: any): string {
   const comments: Array<string> = [];
@@ -27,6 +28,12 @@ function getMiaiValueFromComment(comment: string): number | null {
     }
   }
   return null;
+}
+
+export function saveAttempt(attempt: any) {
+  const attemptFilePath = path.join(LIBRARY_ROOT, ATTEMPTS_FILE);
+  const textEntry = JSON.stringify(attempt) + "\n";
+  return appendFile(attemptFilePath, textEntry, "utf8");
 }
 
 async function loadMiaiValuesFromFile(path: string) {
