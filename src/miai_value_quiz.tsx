@@ -116,7 +116,7 @@ class MiaiValueQuiz extends React.Component<MiaiQuizProps, MiaiQuizState> {
 	  }
 	}
       />
-      <button onClick={() => this.submitGuess()}>Next Problem</button>
+      <button onClick={() => this.submitGuess()}>This is my best guess</button>
     </div>
   }
 }
