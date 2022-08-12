@@ -92,6 +92,7 @@ async function loadMiaiValuesFromFile(path: string) {
 }
 
 export async function loadMiaiValueSgfs() {
+  console.log("__dirname", __dirname);
   // list already attempted problems
   const attemptKeys = await loadAttempts();
   console.log("attempted", attemptKeys);

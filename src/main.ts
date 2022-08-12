@@ -24,6 +24,7 @@ const OPTIONS = {
 };
 
 function createWindow() {
+  console.log("userData", app.getPath("userData"));
   // Create the browser window.
   const mainWindow = new BrowserWindow(OPTIONS);
 
