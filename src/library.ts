@@ -70,6 +70,7 @@ async function loadMiaiValuesFromFile(path: string) {
     const {move} = moveNode;
     if (!move) continue;
     const _move = sgfMoveToMove(move);
+    const prevKo = board.ko;
     const captures = board.playMove(_move);
     const comment = getComment(moveNode);
     const miaiValue = getMiaiValueFromComment(comment);
@@ -77,6 +78,7 @@ async function loadMiaiValuesFromFile(path: string) {
     if (miaiValue >= leastValue) continue;
     if (miaiValue < 0) break;
     leastValue = miaiValue;
+    if (prevKo || board.ko) continue;
     result.push({
       path,
       moveNo: i,
