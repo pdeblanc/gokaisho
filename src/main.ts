@@ -9,9 +9,9 @@ function createWindow() {
       preload: path.join(__dirname, "preload.js"),
       contextIsolation: false,
       nodeIntegration: true,
-      devTools: true,
+      devTools: false,
     },
-    width: 1400,
+    width: 520,
   });
 
   // and load the index.html of the app.
