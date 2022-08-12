@@ -38,7 +38,7 @@ const Goban: React.FC<GobanProps> = ({board, justCaptured, lastMove}) => {
 	  justCaptured && justCaptured.map((coord) => {
 	    const {x, y} = jaCoordToXyCoord(coord);
 	    return (
-	      <>
+	      <React.Fragment key={coord}>
 		<circle
 		  cx={x * SQUARE_SIZE}
 		  cy={y * SQUARE_SIZE}
@@ -55,7 +55,7 @@ const Goban: React.FC<GobanProps> = ({board, justCaptured, lastMove}) => {
 		  stroke="red"
 		  opacity="0.5"
 		/>
-	      </>
+	      </React.Fragment>
 	    )
 	  })
 	}
