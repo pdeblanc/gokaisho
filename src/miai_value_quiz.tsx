@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import Goban from "./goban/goban";
-import { randomSymmetry, transformJaCoord } from "./coord";
+import { randomSymmetry, transformJaCoord, Symmetry } from "./coord";
 import { transformMove } from "./go";
 
 type MiaiQuizProps = {
@@ -8,15 +8,28 @@ type MiaiQuizProps = {
 };
 
 type MiaiQuizState = {
-  currentProblemIndex: number;
+  problemIndex: number;
+  symmetry: Symmetry;
 };
 
 class MiaiValueQuiz extends React.Component<MiaiQuizProps, MiaiQuizState> {
+  constructor(props: MiaiQuizProps) {
+    super(props);
+    this.state = this.randomState();
+  }
+
+  randomState(): MiaiQuizState {
+    const {problems} = this.props;
+    return {
+      problemIndex: Math.floor(Math.random() * problems.length),
+      symmetry: randomSymmetry()
+    };
+  }
+
   render() {
     const {problems} = this.props;
-    const example = problems[Math.floor(Math.random() * problems.length)];
-    // choose rotation
-    const symmetry = randomSymmetry();
+    const {symmetry, problemIndex} = this.state;
+    const example = problems[problemIndex];
     // rotate example
     const rotatedExample = {
       board: example.board.transform(symmetry),
@@ -30,11 +43,14 @@ class MiaiValueQuiz extends React.Component<MiaiQuizProps, MiaiQuizState> {
       symmetry,
     }
     console.log(rotatedExample);
-    return <Goban
-      board={rotatedExample.board}
-      lastMove={rotatedExample.move}
-      justCaptured={rotatedExample.captures}
-    />;
+    return <div>
+      <Goban
+	board={rotatedExample.board}
+	lastMove={rotatedExample.move}
+	justCaptured={rotatedExample.captures}
+      />
+      <button onClick={() => this.setState(this.randomState())}>Next Problem</button>
+    </div>
   }
 }
 
