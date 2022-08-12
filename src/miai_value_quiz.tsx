@@ -14,16 +14,31 @@ type MiaiQuizState = {
 };
 
 class MiaiValueQuiz extends React.Component<MiaiQuizProps, MiaiQuizState> {
+  attempted: Set<Number>;
+
   constructor(props: MiaiQuizProps) {
     super(props);
+    this.attempted = new Set();
     this.state = this.randomState();
   }
 
   randomState(): MiaiQuizState {
     const {problems} = this.props;
     console.log(`Choosing from ${problems.length} problems...`);
+    let problemIndex = Math.floor(Math.random() * problems.length)
+    console.log(problemIndex, this.attempted);
+    while (this.attempted.has(problemIndex)) {
+      if (problems.length <= this.attempted.size) {
+	problemIndex = -1;
+      } else {
+	problemIndex = Math.floor(Math.random() * problems.length)
+      }
+    }
+    if (problems.length === 0) {
+      problemIndex = -1;
+    }
     return {
-      problemIndex: Math.floor(Math.random() * problems.length),
+      problemIndex,
       symmetry: randomSymmetry()
     };
   }
@@ -35,8 +50,13 @@ class MiaiValueQuiz extends React.Component<MiaiQuizProps, MiaiQuizState> {
     const problem = problems[problemIndex];
     const inputElt = document.getElementById("number-input") as HTMLInputElement;
     const guess = inputElt.value;
+    const parsedGuess = parseFloat(guess);
+    if (!(parsedGuess >= 0 && parsedGuess <= 14)) {
+      return;
+    }
     const timeStampMs = Date.now();
     // save result
+    this.attempted.add(problemIndex);
     saveAttempt({
       path: problem.path,
       moveNo: problem.moveNo,
@@ -55,6 +75,11 @@ class MiaiValueQuiz extends React.Component<MiaiQuizProps, MiaiQuizState> {
   render() {
     const {problems} = this.props;
     const {symmetry, problemIndex} = this.state;
+
+    if (problemIndex === -1) {
+      return <div>No problems left. Have a nice day!</div>;
+    }
+
     const example = problems[problemIndex];
     // rotate example
     const rotatedExample = {
