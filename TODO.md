@@ -1,5 +1,4 @@
 Tasks concerning the miai value study app as it exists today:
-- Skip ko positions
 - Figure out how to package SGF files
 - Write README
 - Create a tree of board positions from an sgf
