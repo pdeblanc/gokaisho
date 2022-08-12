@@ -36,6 +36,21 @@ export function saveAttempt(attempt: any) {
   return appendFile(attemptFilePath, textEntry, "utf8");
 }
 
+async function loadAttempts() {
+  const attemptFilePath = path.join(LIBRARY_ROOT, ATTEMPTS_FILE);
+  const data = await readFile(attemptFilePath, "utf8");
+  const lines = data.split("\n").map(line => line.trim()).filter(line => line);
+  const entries = lines.map(line => JSON.parse(line));
+  const attemptKeys: any = {};
+  for (const entry of entries) {
+    if (!attemptKeys[entry.path]) {
+      attemptKeys[entry.path] = {};
+    }
+    attemptKeys[entry.path][entry.moveNo] = true;
+  }
+  return attemptKeys;
+}
+
 async function loadMiaiValuesFromFile(path: string) {
   const data = await readFile(path, "utf8");
   const board = gameStart({w: 19, h: 19});
@@ -70,6 +85,9 @@ async function loadMiaiValuesFromFile(path: string) {
 }
 
 export async function loadMiaiValueSgfs() {
+  // list already attempted problems
+  const attemptKeys = await loadAttempts();
+  console.log("attempted", attemptKeys);
   const dirContents = await readdir(LIBRARY_ROOT);
   if (!dirContents.includes(MIAI_DIR)) {
     return [];
@@ -84,5 +102,7 @@ export async function loadMiaiValueSgfs() {
   )) {
     result.push(...results);
   }
-  return result;
+  return result.filter(
+    entry => !(attemptKeys[entry.path]) || !(attemptKeys[entry.path][entry.moveNo])
+  );
 }
