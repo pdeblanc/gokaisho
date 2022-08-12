@@ -61,7 +61,7 @@ class MiaiValueQuiz extends React.Component<MiaiQuizProps, MiaiQuizState> {
       path: problem.path,
       moveNo: problem.moveNo,
       symmetry,
-      miaiValue: 13.37,
+      miaiValue: problem.miaiValue,
       guess,
       timeStampMs,
       localDate: new Date().toLocaleString()
