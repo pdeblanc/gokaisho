@@ -1,7 +1,7 @@
 TODO:
 
 - Skip ko positions
-- Save quiz answers to file
+- Filter out already-studied problems
 - Create a tree of board positions from an sgf
 - Refactor constants in goban components
 - Improve type annotations

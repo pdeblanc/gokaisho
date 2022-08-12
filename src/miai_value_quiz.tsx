@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import Goban from "./goban/goban";
 import { randomSymmetry, transformJaCoord, Symmetry } from "./coord";
 import { transformMove } from "./go";
+import { saveAttempt } from "./library";
 
 type MiaiQuizProps = {
   problems: any;
@@ -20,10 +21,35 @@ class MiaiValueQuiz extends React.Component<MiaiQuizProps, MiaiQuizState> {
 
   randomState(): MiaiQuizState {
     const {problems} = this.props;
+    console.log(`Choosing from ${problems.length} problems...`);
     return {
       problemIndex: Math.floor(Math.random() * problems.length),
       symmetry: randomSymmetry()
     };
+  }
+
+  submitGuess() {
+    // retrieve values
+    const {problems} = this.props;
+    const {problemIndex, symmetry} = this.state;
+    const problem = problems[problemIndex];
+    const inputElt = document.getElementById("number-input") as HTMLInputElement;
+    const guess = inputElt.value;
+    const timeStampMs = Date.now();
+    // save result
+    saveAttempt({
+      path: problem.path,
+      moveNo: problem.moveNo,
+      symmetry: problem.symmetry,
+      miaiValue: 13.37,
+      guess,
+      timeStampMs,
+      localDate: new Date().toLocaleString()
+    });
+    // update UI
+    inputElt.value = "";
+    // select new problem
+    this.setState(this.randomState());
   }
 
   render() {
@@ -49,7 +75,23 @@ class MiaiValueQuiz extends React.Component<MiaiQuizProps, MiaiQuizState> {
 	lastMove={rotatedExample.move}
 	justCaptured={rotatedExample.captures}
       />
-      <button onClick={() => this.setState(this.randomState())}>Next Problem</button>
+      Value:
+      <input
+	type="number"
+	min="0"
+	max="14"
+	step="0.01"
+	id="number-input"
+	autoFocus
+	onKeyPress={
+	  event => {
+	    if (event.type === "keypress" && event.key === "Enter") {
+	      this.submitGuess();
+	    }
+	  }
+	}
+      />
+      <button onClick={() => this.submitGuess()}>Next Problem</button>
     </div>
   }
 }
