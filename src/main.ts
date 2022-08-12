@@ -1,18 +1,31 @@
 import { app, BrowserWindow } from "electron";
 import * as path from "path";
 
+const DEV_OPTIONS = {
+  height: 600,
+  webPreferences: {
+    preload: path.join(__dirname, "preload.js"),
+    contextIsolation: false,
+    nodeIntegration: true,
+    devTools: true,
+  },
+  width: 1400,
+};
+
+const OPTIONS = {
+  height: 600,
+  webPreferences: {
+    preload: path.join(__dirname, "preload.js"),
+    contextIsolation: false,
+    nodeIntegration: true,
+    devTools: false,
+  },
+  width: 520,
+};
+
 function createWindow() {
   // Create the browser window.
-  const mainWindow = new BrowserWindow({
-    height: 600,
-    webPreferences: {
-      preload: path.join(__dirname, "preload.js"),
-      contextIsolation: false,
-      nodeIntegration: true,
-      devTools: false,
-    },
-    width: 520,
-  });
+  const mainWindow = new BrowserWindow(OPTIONS);
 
   // and load the index.html of the app.
   mainWindow.loadFile(path.join(__dirname, "../index.html"));
