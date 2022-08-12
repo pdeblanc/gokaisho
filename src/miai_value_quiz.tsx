@@ -40,7 +40,7 @@ class MiaiValueQuiz extends React.Component<MiaiQuizProps, MiaiQuizState> {
     saveAttempt({
       path: problem.path,
       moveNo: problem.moveNo,
-      symmetry: problem.symmetry,
+      symmetry,
       miaiValue: 13.37,
       guess,
       timeStampMs,
