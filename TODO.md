@@ -1,7 +1,6 @@
 TODO:
 
 - Skip ko positions
-- Proceed to next problem
 - Save quiz answers to file
 - Create a tree of board positions from an sgf
 - Refactor constants in goban components
