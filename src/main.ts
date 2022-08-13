@@ -26,7 +26,7 @@ const OPTIONS = {
 function createWindow() {
   console.log("userData", app.getPath("userData"));
   // Create the browser window.
-  const mainWindow = new BrowserWindow(OPTIONS);
+  const mainWindow = new BrowserWindow(DEV_OPTIONS);
 
   // and load the index.html of the app.
   mainWindow.loadFile(path.join(__dirname, "../index.html"));

@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { createRoot } from 'react-dom/client';
 import MiaiValueQuiz from "./miai_value_quiz";
 import { loadMiaiValueSgfs } from "./library";
+import { KataGo } from "./katago";
 
 declare global {
     interface Window { main: any; }
@@ -9,6 +10,7 @@ declare global {
 
 window.main = async function() {
   // load problems
+  const katago = new KataGo();
   const problems = await loadMiaiValueSgfs();
   createRoot(document.getElementById("react-root")).render(
     <MiaiValueQuiz problems={problems} />
