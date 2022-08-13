@@ -1,7 +1,6 @@
 Tasks concerning the miai value study app as it exists today:
 - Figure out how to package SGF files
 - Create a tree of board positions from an sgf
-- Refactor constants in goban components
 - Improve type annotations
 
 

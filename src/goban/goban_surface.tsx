@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
 import { range } from "../util";
+import { SQUARE_SIZE } from "./constants";
 
-const BOARD_SIZE = 19;
-const SQUARE_SIZE = 16;
 
 const HOSHI = [
   {x: 3, y: 3},
@@ -17,27 +16,29 @@ const HOSHI = [
 ];
 
 type GobanSurfaceProps = {
+  w: number,
+  h: number,
 };
 
-const GobanSurface: React.FC<GobanSurfaceProps> = () => {
+const GobanSurface: React.FC<GobanSurfaceProps> = ({w, h}) => {
   return (
     <>
       <rect
 	x={-SQUARE_SIZE / 2}
 	y={-SQUARE_SIZE / 2}
-	width={BOARD_SIZE * SQUARE_SIZE+ 4}
-	height={BOARD_SIZE * SQUARE_SIZE + 4}
+	width={w * SQUARE_SIZE+ 4}
+	height={h * SQUARE_SIZE + 4}
 	stroke="none"
 	fill="#ea1"
       />
       <>
 	{
-	  range(0, BOARD_SIZE).map(u => (
+	  range(0, w).map(u => (
 	    <line
 	      x1={u * SQUARE_SIZE}
 	      x2={u * SQUARE_SIZE}
 	      y1={0}
-	      y2={(BOARD_SIZE - 1) * SQUARE_SIZE}
+	      y2={(h - 1) * SQUARE_SIZE}
 	      stroke="black"
 	      key={u}
 	    />
@@ -46,10 +47,10 @@ const GobanSurface: React.FC<GobanSurfaceProps> = () => {
       </>
       <>
 	{
-	  range(0, BOARD_SIZE).map(v => (
+	  range(0, h).map(v => (
 	    <line
 	      x1={0}
-	      x2={(BOARD_SIZE - 1) * SQUARE_SIZE}
+	      x2={(w - 1) * SQUARE_SIZE}
 	      y1={v * SQUARE_SIZE}
 	      y2={v * SQUARE_SIZE}
 	      stroke="black"

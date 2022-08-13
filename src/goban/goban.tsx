@@ -4,9 +4,7 @@ import { ImmutableSituation, Move } from "../go";
 import { jaCoordToXyCoord, JaCoord } from "../coord";
 import GobanSvg from "./goban_svg";
 import GobanSurface from "./goban_surface";
-
-const BOARD_SIZE = 19;
-const SQUARE_SIZE = 16;
+import { SQUARE_SIZE } from "./constants";
 
 type GobanProps = {
   board: ImmutableSituation;
@@ -15,10 +13,11 @@ type GobanProps = {
 };
 
 const Goban: React.FC<GobanProps> = ({board, justCaptured, lastMove}) => {
+  const {w, h} = board.size;
   const koXy = board.ko && jaCoordToXyCoord(board.ko);
   return (
-    <GobanSvg>
-      <GobanSurface />
+    <GobanSvg w={w} h={h}>
+      <GobanSurface w={w} h={h} />
       <>
 	{
 	  board.blackStones().map((coord) => {
