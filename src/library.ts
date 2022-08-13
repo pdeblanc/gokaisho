@@ -110,7 +110,5 @@ export async function loadMiaiValueSgfs() {
   )) {
     result.push(...results);
   }
-  return result.filter(
-    entry => !(attemptKeys[entry.path]) || !(attemptKeys[entry.path][entry.moveNo])
-  );
+  return result;
 }
