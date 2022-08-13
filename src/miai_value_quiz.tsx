@@ -2,10 +2,10 @@ import React, { Component } from 'react';
 import Goban from "./goban/goban";
 import { randomSymmetry, transformJaCoord, Symmetry } from "./coord";
 import { transformMove } from "./go";
-import { saveAttempt } from "./library";
+import { MiaiValueProblem, saveAttempt } from "./library";
 
 type MiaiQuizProps = {
-  problems: any;
+  problems: Array<MiaiValueProblem>;
 };
 
 type MiaiQuizState = {

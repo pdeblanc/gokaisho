@@ -1,12 +1,22 @@
 import { readdir, readFile, appendFile } from "node:fs/promises";
 import path from "node:path";
 const SgfParser = require('ts-sgf-parser').SgfParser;
-import { gameStart, sgfMoveToMove } from "./go";
+import { ImmutableSituation, Move, gameStart, sgfMoveToMove } from "./go";
+import { JaCoord } from "./coord";
 
 // TODO: Make this more portable
 const LIBRARY_ROOT = path.join(path.dirname(__dirname), "data");
 const MIAI_DIR = "miai_value_sgfs";
 const ATTEMPTS_FILE = "attempts.jsonl";
+
+export type MiaiValueProblem = {
+  path: string,
+  moveNo: number,
+  miaiValue: number,
+  move: Move,
+  board: ImmutableSituation,
+  captures: Array<JaCoord>,
+};
 
 function getComment(moveNode: any): string {
   const comments: Array<string> = [];
@@ -56,7 +66,7 @@ async function loadAttempts() {
   return attemptKeys;
 }
 
-async function loadMiaiValuesFromFile(path: string) {
+async function loadMiaiValuesFromFile(path: string): Promise<Array<MiaiValueProblem>> {
   const data = await readFile(path, "utf8");
   const board = gameStart({w: 19, h: 19});
   const parser = new SgfParser(data);
