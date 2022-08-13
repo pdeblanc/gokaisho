@@ -11,6 +11,7 @@ type MiaiQuizProps = {
 type MiaiQuizState = {
   problemIndex: number;
   symmetry: Symmetry;
+  userGuess: number | null;
 };
 
 class MiaiValueQuiz extends React.Component<MiaiQuizProps, MiaiQuizState> {
@@ -41,7 +42,8 @@ class MiaiValueQuiz extends React.Component<MiaiQuizProps, MiaiQuizState> {
     }
     return {
       problemIndex,
-      symmetry: randomSymmetry()
+      symmetry: randomSymmetry(),
+      userGuess: null
     };
   }
 
@@ -63,19 +65,22 @@ class MiaiValueQuiz extends React.Component<MiaiQuizProps, MiaiQuizState> {
       moveNo: problem.moveNo,
       symmetry,
       miaiValue: problem.miaiValue,
-      guess,
+      parsedGuess,
       timeStampMs,
       localDate: new Date().toLocaleString()
     });
-    // update UI
-    this.inputElement.value = "";
+    // select new problem
+    this.setState({userGuess: parsedGuess});
+  }
+
+  nextProblem() {
     // select new problem
     this.setState(this.randomState());
   }
 
   render() {
     const {problems} = this.props;
-    const {symmetry, problemIndex} = this.state;
+    const {symmetry, problemIndex, userGuess} = this.state;
 
     if (problemIndex === -1) {
       return <div>No problems left. Have a nice day!</div>;
@@ -101,24 +106,34 @@ class MiaiValueQuiz extends React.Component<MiaiQuizProps, MiaiQuizState> {
 	lastMove={rotatedExample.move}
 	justCaptured={rotatedExample.captures}
       />
-      Value:
-      <input
-	type="number"
-	min="0"
-	max="14"
-	step="0.01"
-	id="number-input"
-	ref={element => this.inputElement = element}
-	autoFocus
-	onKeyPress={
-	  event => {
-	    if (event.type === "keypress" && event.key === "Enter") {
-	      this.submitGuess();
+      {
+	userGuess === null ?
+	<div>
+	  Value:
+	  <input
+	    type="number"
+	    min="0"
+	    max="14"
+	    step="0.01"
+	    id="number-input"
+	    ref={element => this.inputElement = element}
+	    autoFocus
+	    onKeyPress={
+	      event => {
+		if (event.type === "keypress" && event.key === "Enter") {
+		  this.submitGuess();
+		}
+	      }
 	    }
-	  }
-	}
-      />
-      <button onClick={() => this.submitGuess()}>This is my best guess</button>
+	  />
+	  <button onClick={() => this.submitGuess()}>This is my best guess</button>
+	</div>
+	:
+	<div>
+	  Your guess: {userGuess}; correct answer: {example.miaiValue}
+	  <button autoFocus onClick={() => this.nextProblem()}>Next Problem</button>
+	</div>
+      }
     </div>
   }
 }
