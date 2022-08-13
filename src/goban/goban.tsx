@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import { range } from "../util";
 import { ImmutableSituation, Move } from "../go";
-import { jaCoordToXyCoord, JaCoord } from "../coord";
+import { jaCoordToXyCoord } from "../coord";
+import { JaCoord } from "../types";
 import GobanSvg from "./goban_svg";
 import GobanSurface from "./goban_surface";
 import { SQUARE_SIZE } from "./constants";

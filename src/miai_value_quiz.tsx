@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Goban from "./goban/goban";
-import { randomSymmetry, transformJaCoord, Symmetry } from "./coord";
+import { randomSymmetry, transformJaCoord } from "./coord";
+import { Symmetry } from "./types";
 import { transformMove } from "./go";
 import { MiaiValueProblem, saveAttempt } from "./library";
 

@@ -4,15 +4,12 @@
 // Should I use strings for coordinates? That would simplify maps and sets.
 
 import {
-  JaCoord,
-  XyCoord,
   jaCoordToXyCoord,
   xyCoordToJaCoord,
   transformJaCoord,
   transformXyCoord,
-  Symmetry,
-  symmetries,
 } from "./coord";
+import { JaCoord, XyCoord, Symmetry, symmetries } from "./types";
 
 export interface SgfMove {
   player: "B" | "W";
