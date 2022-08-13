@@ -15,10 +15,12 @@ type MiaiQuizState = {
 
 class MiaiValueQuiz extends React.Component<MiaiQuizProps, MiaiQuizState> {
   attempted: Set<Number>;
+  inputElement: HTMLInputElement | null;
 
   constructor(props: MiaiQuizProps) {
     super(props);
     this.attempted = new Set();
+    this.inputElement = null;
     this.state = this.randomState();
   }
 
@@ -48,8 +50,7 @@ class MiaiValueQuiz extends React.Component<MiaiQuizProps, MiaiQuizState> {
     const {problems} = this.props;
     const {problemIndex, symmetry} = this.state;
     const problem = problems[problemIndex];
-    const inputElt = document.getElementById("number-input") as HTMLInputElement;
-    const guess = inputElt.value;
+    const guess = this.inputElement.value;
     const parsedGuess = parseFloat(guess);
     if (!(parsedGuess >= 0 && parsedGuess <= 14)) {
       return;
@@ -67,7 +68,7 @@ class MiaiValueQuiz extends React.Component<MiaiQuizProps, MiaiQuizState> {
       localDate: new Date().toLocaleString()
     });
     // update UI
-    inputElt.value = "";
+    this.inputElement.value = "";
     // select new problem
     this.setState(this.randomState());
   }
@@ -107,6 +108,7 @@ class MiaiValueQuiz extends React.Component<MiaiQuizProps, MiaiQuizState> {
 	max="14"
 	step="0.01"
 	id="number-input"
+	ref={element => this.inputElement = element}
 	autoFocus
 	onKeyPress={
 	  event => {
