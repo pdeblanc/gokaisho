@@ -42,13 +42,22 @@ export const symmetries = {
 export type Symmetry = keyof typeof symmetries;
 
 /*
- * Moves
+ * Colors
  ***/
 
+// this app
+export type Color = "black" | "white" | "empty";
+export type PlayerColor = "black" | "white";
+// gtp
 export type GtpPlayer = "B" | "W";
 
 /*
  * Moves
  ***/
+
+export type Move = {
+  player: PlayerColor,
+  value: JaCoord | "pass"
+}
 
 export type KataGoMove = [GtpPlayer, GtpCoord];

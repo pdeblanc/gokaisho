@@ -1,8 +1,8 @@
 import { readdir, readFile, appendFile } from "node:fs/promises";
 import path from "node:path";
 const SgfParser = require('ts-sgf-parser').SgfParser;
-import { ImmutableSituation, Move, gameStart, sgfMoveToMove } from "./go";
-import { JaCoord } from "./types";
+import { ImmutableSituation, gameStart, sgfMoveToMove } from "./go";
+import { JaCoord, Move } from "./types";
 
 // TODO: Make this more portable
 const LIBRARY_ROOT = path.join(path.dirname(__dirname), "data");

@@ -7,6 +7,10 @@ import {
   kanjiNumbers,
   symmetries
 } from "./types";
+import {
+  jaCoordToXyCoord,
+  xyCoordToJaCoord,
+} from "./conversion";
 
 export function randomSymmetry(): Symmetry {
   const keys: Array<Symmetry> = Object.keys(symmetries) as Array<Symmetry>;
@@ -35,17 +39,4 @@ export function transformJaCoord(
   const xyCoord = jaCoordToXyCoord(coord);
   const newXyCoord = transformXyCoord(boardSize, symmetry, xyCoord);
   return xyCoordToJaCoord(newXyCoord);
-}
-
-export function jaCoordToXyCoord(jaCoord: JaCoord): XyCoord {
-  const parts = jaCoord.split("の");
-  const x = parseInt(parts[0]) - 1;
-  const yKanji = parts[1] as KanjiNumber;
-  const y = kanjiNumbers.indexOf(yKanji) - 1;
-  return {x, y};
-}
-
-export function xyCoordToJaCoord(xyCoord: XyCoord): JaCoord {
-  const {x, y} = xyCoord;
-  return `${x + 1}の${kanjiNumbers[y + 1]}`
 }

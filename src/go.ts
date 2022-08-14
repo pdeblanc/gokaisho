@@ -3,13 +3,18 @@
 // Should ko intersections specify which player is not allowed to go there?
 // Should I use strings for coordinates? That would simplify maps and sets.
 
+import { transformJaCoord, transformXyCoord } from "./rotate";
+import { jaCoordToXyCoord, xyCoordToJaCoord } from "./conversion";
 import {
-  jaCoordToXyCoord,
-  xyCoordToJaCoord,
-  transformJaCoord,
-  transformXyCoord,
-} from "./coord";
-import { JaCoord, XyCoord, Symmetry, symmetries } from "./types";
+  BoardSize,
+  Color,
+  JaCoord,
+  Move,
+  PlayerColor,
+  XyCoord,
+  Symmetry,
+  symmetries
+} from "./types";
 
 export interface SgfMove {
   player: "B" | "W";
@@ -17,14 +22,6 @@ export interface SgfMove {
 }
 
 const sgfAlphabet = "abcdefghijklmnopqrs";
-
-export type Color = "black" | "white" | "empty";
-export type PlayerColor = "black" | "white";
-
-export type Move = {
-  player: PlayerColor,
-  value: JaCoord | "pass"
-}
 
 export function transformMove(
   boardSize: BoardSize,
@@ -38,8 +35,6 @@ export function transformMove(
     value: transformJaCoord(boardSize, symmetry, value)
   };
 }
-
-export type BoardSize = {w: number, h: number};
 
 const parseSgfColor = (sgfColor: string): PlayerColor => {
   if (sgfColor === "B") return "black";
