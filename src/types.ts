@@ -61,3 +61,19 @@ export type Move = {
 }
 
 export type KataGoMove = [GtpPlayer, GtpCoord];
+
+/*
+ * KataGo Analysis
+ ***/
+
+export type KataGoQuery = {
+  id: string,
+  initialStones: Array<KataGoMove>,
+  moves: Array<KataGoMove>,
+  rules: string,
+  komi: number,
+  boardXSize: number,
+  boardYSize: number,
+  includePolicy: boolean,
+  includeOwnership: boolean,
+}
