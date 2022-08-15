@@ -8,12 +8,11 @@ export const kanjiNumbers = [
 ] as const;
 export type KanjiNumber = typeof kanjiNumbers[number];
 
-export const gtpLetterValues = {
-  "A": 0, "B": 1, "C": 2, "D": 3, "E": 4, "F": 5, "G": 6,
-  "H": 7, "J": 8, "K": 9, "L": 10, "M": 11, "N": 12,
-  "O": 13, "P": 14, "Q": 15, "R": 16, "S": 17, "T": 18,
-}
-export type GtpLetter = keyof typeof gtpLetterValues;
+export const gtpLetters = [
+  "A", "B", "C", "D", "E", "F", "G", "H", "J", "K", "L", "M", "N", "O", "P", 
+  "Q", "R", "S", "T", 
+]
+export type GtpLetter = typeof gtpLetters[number];
 
 /*
  * Vector-like types
