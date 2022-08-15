@@ -1,4 +1,4 @@
-import { GtpCoord, JaCoord, KanjiNumber, XyCoord, gtpLetters, kanjiNumbers } from "./types";
+import { BoardSize, GtpCoord, JaCoord, KanjiNumber, XyCoord, gtpLetters, kanjiNumbers } from "./types";
 
 export function jaCoordToXyCoord(jaCoord: JaCoord): XyCoord {
   const parts = jaCoord.split("の");
@@ -13,12 +13,12 @@ export function xyCoordToJaCoord(xyCoord: XyCoord): JaCoord {
   return `${x + 1}の${kanjiNumbers[y + 1]}`
 }
 
-export function xyCoordToGtpCoord(xyCoord: XyCoord): GtpCoord {
+export function xyCoordToGtpCoord(boardSize: BoardSize, xyCoord: XyCoord): GtpCoord {
   // TODO: flip y
   const {x, y} = xyCoord;
-  return `${gtpLetters[x]}${y + 1}`
+  return `${gtpLetters[x]}${boardSize.h - y}`
 }
 
-export function jaCoordToGtpCoord(jaCoord: JaCoord): GtpCoord {
-  return xyCoordToGtpCoord(jaCoordToXyCoord(jaCoord));
+export function jaCoordToGtpCoord(boardSize: BoardSize, jaCoord: JaCoord): GtpCoord {
+  return xyCoordToGtpCoord(boardSize, jaCoordToXyCoord(jaCoord));
 }

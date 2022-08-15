@@ -4,15 +4,18 @@ import { randomSymmetry, transformJaCoord } from "./rotate";
 import { Symmetry } from "./types";
 import { transformMove } from "./go";
 import { MiaiValueProblem, saveAttempt } from "./library";
+import { KataGo, query } from "./katago";
 
 type MiaiQuizProps = {
   problems: Array<MiaiValueProblem>;
+  katago: KataGo;
 };
 
 type MiaiQuizState = {
   problemIndex: number;
   symmetry: Symmetry;
   userGuess: number | null;
+  ownership: Array<number> | null;
 };
 
 class MiaiValueQuiz extends React.Component<MiaiQuizProps, MiaiQuizState> {
@@ -31,7 +34,8 @@ class MiaiValueQuiz extends React.Component<MiaiQuizProps, MiaiQuizState> {
     return {
       problemIndex,
       symmetry: randomSymmetry(),
-      userGuess: null
+      userGuess: null,
+      ownership: null,
     };
   }
 
@@ -67,9 +71,15 @@ class MiaiValueQuiz extends React.Component<MiaiQuizProps, MiaiQuizState> {
 
   render() {
     const {problems} = this.props;
-    const {symmetry, problemIndex, userGuess} = this.state;
+    const {symmetry, problemIndex, userGuess, ownership} = this.state;
 
     const example = problems[problemIndex];
+    // ask katago to get ownership
+    if (ownership === null) {
+      this.props.katago.processQuery(query(example.board)).then(
+	(analysis: any) => this.setState({ownership: analysis.ownership}
+      ));
+    }
     // rotate example
     const rotatedExample = {
       board: example.board.transform(symmetry),
@@ -88,6 +98,7 @@ class MiaiValueQuiz extends React.Component<MiaiQuizProps, MiaiQuizState> {
 	board={rotatedExample.board}
 	lastMove={rotatedExample.move}
 	justCaptured={rotatedExample.captures}
+	ownership={ownership}
       />
       {
 	userGuess === null ?

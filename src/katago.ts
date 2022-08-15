@@ -9,10 +9,10 @@ const StreamSplitter = require("stream-splitter");
 export function query(situation: BaseSituation): KataGoQuery {
   const initialStones: Array<KataGoMove> = [];
   for (const jaCoord of situation.blackStones()) {
-    initialStones.push(["B", jaCoordToGtpCoord(jaCoord)]);
+    initialStones.push(["B", jaCoordToGtpCoord(situation.size, jaCoord)]);
   }
   for (const jaCoord of situation.whiteStones()) {
-    initialStones.push(["W", jaCoordToGtpCoord(jaCoord)]);
+    initialStones.push(["W", jaCoordToGtpCoord(situation.size, jaCoord)]);
   }
   const moves: Array<KataGoMove> = [];
   const rules = "tromp-taylor";
@@ -69,6 +69,7 @@ export class KataGo {
     console.log("AWAITING RESPONSE");
     const response = await pending;
     console.log("RESPONSE", response);
+    return response;
   }
 
   async awaitReady() {

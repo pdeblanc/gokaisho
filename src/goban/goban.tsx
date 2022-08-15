@@ -11,9 +11,10 @@ type GobanProps = {
   board: ImmutableSituation;
   lastMove: Move | null;
   justCaptured: Array<JaCoord>;
+  ownership: Array<number> | null;
 };
 
-const Goban: React.FC<GobanProps> = ({board, justCaptured, lastMove}) => {
+const Goban: React.FC<GobanProps> = ({board, justCaptured, lastMove, ownership}) => {
   const {w, h} = board.size;
   const koXy = board.ko && jaCoordToXyCoord(board.ko);
   return (
@@ -75,6 +76,27 @@ const Goban: React.FC<GobanProps> = ({board, justCaptured, lastMove}) => {
 	  })
 	}
       </>
+      {
+	ownership && <>
+	  {
+	    ownership.map((value, _) => {
+	      const i = 360 - _;
+	      const color = value >= 0 ? "black" : "white";
+	      const certainty = Math.abs(value);
+	      const radius = Math.sqrt(certainty);
+	      const x = i % w;
+	      const y = Math.floor(i / w);
+	      return <circle
+		cx={x * SQUARE_SIZE}
+		cy={y * SQUARE_SIZE}
+		r={radius * (SQUARE_SIZE / 4 - 0.125)}
+		fill={color}
+		key={`${x}_${y}`}
+	      />
+	    })
+	  }
+	</>
+      }
       {
 	koXy && <rect
 	  x={(koXy.x - 1/4) * SQUARE_SIZE}
