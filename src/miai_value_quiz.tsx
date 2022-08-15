@@ -91,7 +91,7 @@ class MiaiValueQuiz extends React.Component<MiaiQuizProps, MiaiQuizState> {
     }
     console.log(rotatedExample);
     // ask katago to get ownership
-    if (ownership === null) {
+    if (ownership === null && userGuess === null) {
       Promise.all([
 	katago.processQuery(query(rotatedExample.before)),
 	katago.processQuery(query(rotatedExample.before.flipTurn())),
@@ -115,7 +115,7 @@ class MiaiValueQuiz extends React.Component<MiaiQuizProps, MiaiQuizState> {
 	board={rotatedExample.after}
 	lastMove={rotatedExample.move}
 	justCaptured={rotatedExample.captures}
-	ownership={ownership}
+	ownership={userGuess ? ownership : null}
       />
       {
 	userGuess === null ?
