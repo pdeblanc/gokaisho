@@ -2,6 +2,7 @@ import { ChildProcessWithoutNullStreams, spawn } from "node:child_process";
 import { JaCoord, KataGoMove, KataGoQuery } from "./types";
 import { BaseSituation } from "./go";
 import { jaCoordToGtpCoord } from "./conversion";
+import {v4 as uuidv4} from 'uuid';
 const StreamSplitter = require("stream-splitter");
 
 
@@ -21,7 +22,7 @@ export function query(situation: BaseSituation): KataGoQuery {
   const includePolicy = true;
   const includeOwnership = true;
   return {
-    id: "foo",
+    id: uuidv4(),
     initialStones,
     moves,
     rules,
