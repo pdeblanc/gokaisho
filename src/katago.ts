@@ -2,6 +2,7 @@ import { ChildProcessWithoutNullStreams, spawn } from "node:child_process";
 import { JaCoord, KataGoMove, KataGoQuery } from "./types";
 import { BaseSituation } from "./go";
 import { jaCoordToGtpCoord } from "./conversion";
+const StreamSplitter = require("stream-splitter");
 
 
 export function query(situation: BaseSituation): KataGoQuery {
@@ -51,7 +52,9 @@ export class KataGo {
       katago, ["analysis", "-model", model, "-config", config]
     );
     this.process.stderr.on("data", data => this.onStdErr(data));
-    this.process.stdout.on("data", data => this.onStdOut(data));
+    const splitter = this.process.stdout.pipe(StreamSplitter("\n"));
+    splitter.encoding = "utf8";
+    splitter.on("token", (token: String) => this.onStdOut(token));
     this.awaitReady();
   }
 
@@ -81,8 +84,7 @@ export class KataGo {
     }
   }
 
-  onStdOut(data: Buffer) {
-    const dataString = data.toString();
-    console.log("KATAGO STDOUT:", dataString);
+  onStdOut(line: String) {
+    console.log("KATAGO STDOUT:", line);
   }
 }
