@@ -23,6 +23,7 @@ export function query(situation: BaseSituation): KataGoQuery {
   const includeOwnership = true;
   return {
     id: uuidv4(),
+    initialPlayer: situation.turn === "black" ? "B" : "W",
     initialStones,
     moves,
     rules,

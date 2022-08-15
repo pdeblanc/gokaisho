@@ -79,8 +79,8 @@ const Goban: React.FC<GobanProps> = ({board, justCaptured, lastMove, ownership})
       {
 	ownership && <>
 	  {
-	    ownership.map((value, _) => {
-	      const i = 360 - _;
+	    ownership.map((value, i) => {
+	      // const i = 360 - _;
 	      const color = value >= 0 ? "black" : "white";
 	      const certainty = Math.abs(value);
 	      const radius = Math.sqrt(certainty);

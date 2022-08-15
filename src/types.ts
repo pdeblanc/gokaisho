@@ -68,6 +68,7 @@ export type KataGoMove = [GtpPlayer, GtpCoord];
 export type KataGoQuery = {
   id: string,
   initialStones: Array<KataGoMove>,
+  initialPlayer: GtpPlayer,
   moves: Array<KataGoMove>,
   rules: string,
   komi: number,
