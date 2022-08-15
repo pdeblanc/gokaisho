@@ -5,6 +5,7 @@ import { Symmetry } from "./types";
 import { transformMove } from "./go";
 import { MiaiValueProblem, saveAttempt } from "./library";
 import { KataGo, query } from "./katago";
+import { range } from "./util";
 
 type MiaiQuizProps = {
   problems: Array<MiaiValueProblem>;
@@ -70,8 +71,9 @@ class MiaiValueQuiz extends React.Component<MiaiQuizProps, MiaiQuizState> {
   }
 
   render() {
-    const {problems} = this.props;
+    const {katago, problems} = this.props;
     const {symmetry, problemIndex, userGuess, ownership} = this.state;
+    console.log("OWNERSHIP", JSON.stringify(ownership));
 
     const example = problems[problemIndex];
     // rotate example
@@ -90,9 +92,23 @@ class MiaiValueQuiz extends React.Component<MiaiQuizProps, MiaiQuizState> {
     console.log(rotatedExample);
     // ask katago to get ownership
     if (ownership === null) {
-      this.props.katago.processQuery(query(rotatedExample.after)).then(
-	(analysis: any) => this.setState({ownership: analysis.ownership}
-      ));
+      Promise.all([
+	katago.processQuery(query(rotatedExample.before)),
+	katago.processQuery(query(rotatedExample.before.flipTurn())),
+	katago.processQuery(query(rotatedExample.after)),
+	katago.processQuery(query(rotatedExample.after.flipTurn()))
+      ]).then(
+	(analyses: any) => this.setState({
+	  ownership: range(0, analyses[0].ownership.length).map(i =>
+	    (
+	      analyses[2].ownership[i] +
+	      analyses[3].ownership[i] -
+	      analyses[0].ownership[i] -
+	      analyses[1].ownership[i]
+	    ) / 2
+	  )
+	})
+      )
     }
     return <div>
       <Goban

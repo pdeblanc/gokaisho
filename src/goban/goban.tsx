@@ -86,6 +86,9 @@ const Goban: React.FC<GobanProps> = ({board, justCaptured, lastMove, ownership})
 	      const radius = Math.sqrt(certainty);
 	      const x = i % w;
 	      const y = Math.floor(i / w);
+	      if (certainty < 0.02) {
+		return null;
+	      }
 	      return <circle
 		cx={x * SQUARE_SIZE}
 		cy={y * SQUARE_SIZE}

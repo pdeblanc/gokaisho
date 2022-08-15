@@ -146,6 +146,10 @@ export class ImmutableSituation extends BaseSituation {
     );
     return new ImmutableSituation(size, intersections, this.turn, ko);
   }
+
+  flipTurn(): ImmutableSituation {
+    return new ImmutableSituation(this.size, this.intersections, oppositeColor(this.turn), null);
+  }
 };
 
 export class MutableSituation extends BaseSituation {
