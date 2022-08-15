@@ -54,7 +54,7 @@ export class KataGo {
     this.process.stderr.on("data", data => this.onStdErr(data));
     const splitter = this.process.stdout.pipe(StreamSplitter("\n"));
     splitter.encoding = "utf8";
-    splitter.on("token", (token: String) => this.onStdOut(token));
+    splitter.on("token", (token: string) => this.onStdOut(token));
     this.awaitReady();
   }
 
@@ -84,7 +84,8 @@ export class KataGo {
     }
   }
 
-  onStdOut(line: String) {
-    console.log("KATAGO STDOUT:", line);
+  onStdOut(line: string) {
+    const data = JSON.parse(line);
+    this.queryResolvers[data.id](data);
   }
 }
