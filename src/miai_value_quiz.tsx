@@ -76,18 +76,19 @@ class MiaiValueQuiz extends React.Component<MiaiQuizProps, MiaiQuizState> {
     const example = problems[problemIndex];
     // ask katago to get ownership
     if (ownership === null) {
-      this.props.katago.processQuery(query(example.board)).then(
+      this.props.katago.processQuery(query(example.after)).then(
 	(analysis: any) => this.setState({ownership: analysis.ownership}
       ));
     }
     // rotate example
     const rotatedExample = {
-      board: example.board.transform(symmetry),
+      before: example.before.transform(symmetry),
+      after: example.after.transform(symmetry),
       captures: example.captures.map(
-	(stone: any) => transformJaCoord(example.board.size, symmetry, stone)
+	(stone: any) => transformJaCoord(example.before.size, symmetry, stone)
       ),
       miaiValue: example.miaiValue,
-      move: transformMove(example.board.size, symmetry, example.move),
+      move: transformMove(example.before.size, symmetry, example.move),
       moveNo: example.moveNo,
       path: example.path,
       symmetry,
@@ -95,7 +96,7 @@ class MiaiValueQuiz extends React.Component<MiaiQuizProps, MiaiQuizState> {
     console.log(rotatedExample);
     return <div>
       <Goban
-	board={rotatedExample.board}
+	board={rotatedExample.after}
 	lastMove={rotatedExample.move}
 	justCaptured={rotatedExample.captures}
 	ownership={ownership}

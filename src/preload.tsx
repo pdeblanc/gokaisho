@@ -12,7 +12,6 @@ window.main = async function() {
   // load problems
   const katago = new KataGo();
   const problems = await loadMiaiValueSgfs();
-  katago.processQuery(query(problems[0].board));
   createRoot(document.getElementById("react-root")).render(
     <MiaiValueQuiz problems={problems} katago={katago} />
   );

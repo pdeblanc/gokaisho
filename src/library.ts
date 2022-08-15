@@ -14,7 +14,8 @@ export type MiaiValueProblem = {
   moveNo: number,
   miaiValue: number,
   move: Move,
-  board: ImmutableSituation,
+  before: ImmutableSituation,
+  after: ImmutableSituation,
   captures: Array<JaCoord>,
 };
 
@@ -80,7 +81,7 @@ async function loadMiaiValuesFromFile(path: string): Promise<Array<MiaiValueProb
     const {move} = moveNode;
     if (!move) continue;
     const _move = sgfMoveToMove(move);
-    const prevKo = board.ko;
+    const before = board.freeze();
     const captures = board.playMove(_move);
     const comment = getComment(moveNode);
     const miaiValue = getMiaiValueFromComment(comment);
@@ -88,13 +89,14 @@ async function loadMiaiValuesFromFile(path: string): Promise<Array<MiaiValueProb
     if (miaiValue >= leastValue) continue;
     if (miaiValue < 0) break;
     leastValue = miaiValue;
-    if (prevKo || board.ko) continue;
+    if (before.ko || board.ko) continue;
     result.push({
       path,
       moveNo: i,
       miaiValue,
       move: _move,
-      board: board.freeze(),
+      before,
+      after: board.freeze(),
       captures,
     });
   }
