@@ -17,6 +17,13 @@ type GobanProps = {
 const Goban: React.FC<GobanProps> = ({board, justCaptured, lastMove, ownership}) => {
   const {w, h} = board.size;
   const koXy = board.ko && jaCoordToXyCoord(board.ko);
+  if (ownership) {
+    let total = 0;
+    for (const entry of ownership) {
+      total += entry;
+    }
+    console.log("TOTAL OWNERSHIP", total);
+  }
   return (
     <GobanSvg w={w} h={h}>
       <GobanSurface w={w} h={h} />

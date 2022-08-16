@@ -40,6 +40,7 @@ const GobanSurface: React.FC<GobanSurfaceProps> = ({w, h}) => {
 	      y1={0}
 	      y2={(h - 1) * SQUARE_SIZE}
 	      stroke="black"
+	      strokeWidth="0.5"
 	      key={u}
 	    />
 	  ))
@@ -54,6 +55,7 @@ const GobanSurface: React.FC<GobanSurfaceProps> = ({w, h}) => {
 	      y1={v * SQUARE_SIZE}
 	      y2={v * SQUARE_SIZE}
 	      stroke="black"
+	      strokeWidth="0.5"
 	      key={v}
 	    />
 	  ))

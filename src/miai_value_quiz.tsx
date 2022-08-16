@@ -93,18 +93,14 @@ class MiaiValueQuiz extends React.Component<MiaiQuizProps, MiaiQuizState> {
     // ask katago to get ownership
     if (ownership === null && userGuess === null) {
       Promise.all([
-	katago.processQuery(query(rotatedExample.before)),
 	katago.processQuery(query(rotatedExample.before.flipTurn())),
-	katago.processQuery(query(rotatedExample.after)),
 	katago.processQuery(query(rotatedExample.after.flipTurn()))
       ]).then(
 	(analyses: any) => this.setState({
 	  ownership: range(0, analyses[0].ownership.length).map(i =>
 	    (
-	      analyses[2].ownership[i] +
-	      analyses[3].ownership[i] -
-	      analyses[0].ownership[i] -
-	      analyses[1].ownership[i]
+	      analyses[1].ownership[i] -
+	      analyses[0].ownership[i]
 	    ) / 2
 	  )
 	})

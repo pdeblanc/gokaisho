@@ -1,4 +1,5 @@
 node_modules
 dist
 data/attempts.jsonl
+data/attempts.csv
 analysis_logs/
