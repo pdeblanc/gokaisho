@@ -1,8 +1,20 @@
+Fix:
+- Configure KataGo start command
+- State management
+- Missing type annotations
+- Sgf parsing / types
+- Where to store user data
+- Electron Build
+- Weirdness about coordinates
+
 Tasks concerning the miai value study app as it exists today:
-- Figure out how to package SGF files
-- Create a tree of board positions from an sgf
-- Improve type annotations
-- Add territory visualization
+- Add territory visualization toggle
+- Add user performance stats
+
+One level up:
+- Add a main menu to select activity
+- Add a "play against KataGo" activity
+- Add a "review SGF" activity
 
 
 
