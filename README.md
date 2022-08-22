@@ -1,9 +1,9 @@
 To start the app, run:
 
 ```
-npm install
+yarn install
 
-npm start
+yarn start
 ```
 
 This app is about guessing miai values, defined here: https://senseis.xmp.net/?miaivalue
