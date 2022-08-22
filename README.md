@@ -24,9 +24,11 @@ Gain 1 territory while reducing opp. territory by 1  2              1
 Play the first move of the game at 3-4               ~26            ~13 (6.5 komi times 2)
 ```
 
-In this application the miai is desired. Please be careful.
+In this application the miai value is desired. Please be careful.
 
+KataGo is used to visualize influence. If KataGo is not installed, this feature will
+be disabled. 
 
-Right now no feedback is provided.
-However, your answers will be stored in `data/attempts.jsonl`, along with the correct answers.
-So you may inspect this file to get some feedback.
+For now, you must edit the `src/katago.ts` file to specify the location of the katago model.
+
+This will be fixed in the near future; I am planning to enable user preferences after I figure out how to package the app.

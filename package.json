@@ -1,5 +1,6 @@
 {
   "name": "gokaisho",
+  "packageName": "Gokaisho",
   "version": "1.0.0",
   "description": "A minimal Electron application written with Typescript",
   "scripts": {
