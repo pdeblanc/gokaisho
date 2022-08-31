@@ -20,8 +20,10 @@
     },
     "extends": null,
     "files": [
+      "index.html",
       "dist/**/*",
-      "package.json"
+      "package.json",
+      "data/**/*"
     ]
   },
   "repository": "https://github.com/electron/electron-quick-start-typescript",
