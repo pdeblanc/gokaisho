@@ -1,4 +1,4 @@
-import { app, BrowserWindow } from "electron";
+import { app, ipcMain, BrowserWindow } from "electron";
 import * as path from "path";
 
 const DEV_OPTIONS = {
@@ -24,8 +24,11 @@ const OPTIONS = {
 };
 
 function createWindow() {
+  ipcMain.handle("get-user-data-path", async (event) => {
+    return app.getPath("userData");
+  });
+
   console.log("app name", app.getName());
-  console.log("userData", app.getPath("userData"));
   // Create the browser window.
   const mainWindow = new BrowserWindow(DEV_OPTIONS);
 

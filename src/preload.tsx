@@ -1,3 +1,4 @@
+import { ipcRenderer } from "electron";
 import React, { Component } from 'react';
 import { createRoot } from 'react-dom/client';
 import MiaiValueQuiz from "./miai_value_quiz";
@@ -9,6 +10,10 @@ declare global {
 }
 
 window.main = async function() {
+  ipcRenderer.invoke("get-user-data-path").then(
+    result => console.log("GUDP", result)
+  );
+
   // load problems
   const katago = new KataGo();
   const problems = await loadMiaiValueSgfs();
