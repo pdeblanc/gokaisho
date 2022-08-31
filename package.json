@@ -3,12 +3,12 @@
   "packageName": "Gokaisho",
   "version": "1.0.0",
   "description": "A minimal Electron application written with Typescript",
-  "main": "dist/main.js",
+  "main": "build/main.js",
   "scripts": {
     "build": "tsc",
     "watch": "tsc -w",
     "lint": "eslint -c .eslintrc --ext .ts ./src",
-    "start": "yarn build && electron ./dist/main.js",
+    "start": "yarn build && electron ./build/main.js",
     "dev": "electron-webpack dev",
     "pack": "electron-builder --dir",
     "dist": "electron-builder"
@@ -21,7 +21,7 @@
     "extends": null,
     "files": [
       "index.html",
-      "dist/**/*",
+      "build/**/*",
       "package.json",
       "data/**/*"
     ]

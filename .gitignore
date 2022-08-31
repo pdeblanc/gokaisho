@@ -1,5 +1,6 @@
 node_modules
-dist
+build/
+dist/
 data/attempts.jsonl
 data/attempts.csv
 analysis_logs/
