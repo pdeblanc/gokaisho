@@ -1,5 +1,5 @@
 {
-  "name": "gokaisho",
+  "name": "Gokaisho",
   "packageName": "Gokaisho",
   "version": "1.0.0",
   "description": "A minimal Electron application written with Typescript",
@@ -14,7 +14,7 @@
     "dist": "electron-builder"
   },
   "build": {
-    "appId": "gokaisho",
+    "appId": "Gokaisho",
     "mac": {
       "category": "public.app-category.board-games"
     },
