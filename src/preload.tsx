@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import { createRoot } from 'react-dom/client';
 import MiaiValueQuiz from "./miai_value_quiz";
 import { loadMiaiValueSgfs } from "./library";
-import { KataGo, query } from "./katago";
+import { KataGoProcess, KataGoIpcClient } from "./katago";
 
 declare global {
     interface Window { main: any; }
@@ -15,8 +15,8 @@ window.main = async function() {
   );
 
   // load problems
-  const katago = new KataGo();
   const problems = await loadMiaiValueSgfs();
+  const katago = new KataGoProcess();
   createRoot(document.getElementById("react-root")).render(
     <MiaiValueQuiz problems={problems} katago={katago} />
   );

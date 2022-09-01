@@ -1,3 +1,4 @@
+import { ipcRenderer } from "electron";
 import { ChildProcessWithoutNullStreams, spawn } from "node:child_process";
 import { JaCoord, KataGoMove, KataGoQuery } from "./types";
 import { BaseSituation } from "./go";
@@ -36,16 +37,29 @@ export function query(situation: BaseSituation): KataGoQuery {
 }
 
 
-export class KataGo {
+export abstract class KataGo {
+  abstract processQuery(query: KataGoQuery): Promise<any>;
+}
+
+
+export class KataGoIpcClient {
+  async processQuery(query: KataGoQuery): Promise<any> {
+    return ipcRenderer.invoke("process-katago-query", query);
+  }
+}
+
+
+export class KataGoProcess extends KataGo {
   process: ChildProcessWithoutNullStreams;
   ready: Promise<null>;
   resolveReady: (value: PromiseLike<null>) => void;
   queryResolvers: {[key: string]: (value: PromiseLike<any>) => void};
 
   constructor() {
-    const katago = "katago";
+    super();
+    const katago = "/opt/homebrew/bin/katago";
     const model = "/Users/peter/.katrain/kata1-b40c256-s11101799168-d2715431527.bin.gz";
-    const config = "analysis_config.cfg";
+    const config = "/Users/peter/repos/gokaisho/analysis_config.cfg";
     this.queryResolvers = {};
     this.ready = new Promise(
       (resolve, reject) => this.resolveReady = resolve
@@ -60,7 +74,7 @@ export class KataGo {
     this.awaitReady();
   }
 
-  async processQuery(query: KataGoQuery) {
+  async processQuery(query: KataGoQuery): Promise<any> {
     await this.ready;
     const pending = new Promise(
       (resolve, reject) => this.queryResolvers[query.id] = resolve

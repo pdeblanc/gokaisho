@@ -1,5 +1,6 @@
 import { app, ipcMain, BrowserWindow } from "electron";
 import * as path from "path";
+import { KataGoProcess } from "./katago";
 
 const DEV_OPTIONS = {
   height: 600,
@@ -24,6 +25,14 @@ const OPTIONS = {
 };
 
 function createWindow() {
+  /*
+  const engine = new KataGoProcess();
+
+  ipcMain.handle("process-katago-query", async (event, query) => {
+    return engine.processQuery(query);
+  });
+  */
+
   ipcMain.handle("get-user-data-path", async (event) => {
     return app.getPath("userData");
   });

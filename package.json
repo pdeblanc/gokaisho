@@ -23,7 +23,8 @@
       "index.html",
       "build/**/*",
       "package.json",
-      "data/**/*"
+      "data/**/*",
+      "analysis_config.cfg"
     ]
   },
   "repository": "https://github.com/electron/electron-quick-start-typescript",
