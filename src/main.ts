@@ -33,8 +33,12 @@ function createWindow() {
   });
   */
 
+  ipcMain.handle("get-is-packaged", async (event) => {
+    return app.isPackaged;
+  });
+
   ipcMain.handle("get-user-data-path", async (event) => {
-    return app.getPath("userData");
+    return path.join(app.getPath("userData"), "user_data");
   });
 
   console.log("app name", app.getName());

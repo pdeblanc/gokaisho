@@ -3,6 +3,7 @@ import path from "node:path";
 const SgfParser = require('ts-sgf-parser').SgfParser;
 import { ImmutableSituation, gameStart, sgfMoveToMove } from "./go";
 import { JaCoord, Move } from "./types";
+import { getUserDataPath } from "./paths";
 
 // TODO: Make this more portable
 const LIBRARY_ROOT = path.join(path.dirname(__dirname), "data");
@@ -41,14 +42,19 @@ function getMiaiValueFromComment(comment: string): number | null {
   return null;
 }
 
-export function saveAttempt(attempt: any) {
-  const attemptFilePath = path.join(LIBRARY_ROOT, ATTEMPTS_FILE);
+async function getAttemptFilePath(): Promise<string> {
+  const userDataPath = await getUserDataPath();
+  return path.join(userDataPath, ATTEMPTS_FILE);
+}
+
+export async function saveAttempt(attempt: any) {
+  const attemptFilePath = await getAttemptFilePath();
   const textEntry = JSON.stringify(attempt) + "\n";
   return appendFile(attemptFilePath, textEntry, "utf8");
 }
 
 async function loadAttempts() {
-  const attemptFilePath = path.join(LIBRARY_ROOT, ATTEMPTS_FILE);
+  const attemptFilePath = await getAttemptFilePath();
   let data = "";
   try {
     data = await readFile(attemptFilePath, "utf8");
