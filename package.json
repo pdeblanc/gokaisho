@@ -9,7 +9,6 @@
     "watch": "tsc -w",
     "lint": "eslint -c .eslintrc --ext .ts ./src",
     "start": "yarn build && electron ./build/main.js",
-    "dev": "electron-webpack dev",
     "pack": "electron-builder --dir",
     "dist": "electron-builder"
   },
