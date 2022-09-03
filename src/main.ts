@@ -1,6 +1,9 @@
 import { app, ipcMain, BrowserWindow } from "electron";
 import * as path from "path";
 import { KataGoProcess } from "./katago";
+import { ipcMappings } from "./ipc";
+// need to import anything that uses ipc
+require("./paths");
 
 const DEV_OPTIONS = {
   height: 600,
@@ -33,13 +36,12 @@ function createWindow() {
   });
   */
 
-  ipcMain.handle("get-is-packaged", async (event) => {
-    return app.isPackaged;
-  });
-
-  ipcMain.handle("get-user-data-path", async (event) => {
-    return path.join(app.getPath("userData"), "user_data");
-  });
+  for (const ipcMapping of ipcMappings) {
+    const {name, f} = ipcMapping;
+    ipcMain.handle(name, async(event, ...args) => {
+      return f(...args);
+    });
+  }
 
   console.log("app name", app.getName());
   // Create the browser window.

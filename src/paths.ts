@@ -1,26 +1,28 @@
 import path from "node:path";
+import { mkdir } from "node:fs/promises";
 import * as electron from "electron";
+import { ipcFunction } from "./ipc";
 
 const PACKAGE_ROOT = path.dirname(__dirname);
 
-export async function getIsPackaged(): Promise<boolean> {
-  const isRenderer = process && process.type === "renderer";
-  if (isRenderer) {
-    return electron.ipcRenderer.invoke("get-is-packaged");
-  }
-  return electron.app.isPackaged;
+async function ensurePath(path: string): Promise<string> {
+  await mkdir(path, {recursive: true});
+  return path;
 }
 
-export async function getUserDataPath(): Promise<string> {
-  // dev mode
-  const isPackaged = await getIsPackaged();
-  if (!isPackaged) {
-    return path.join(PACKAGE_ROOT, "user_data");
+export const getIsPackaged = ipcFunction(
+  "get-is-packaged", async (): Promise<boolean> => electron.app.isPackaged
+);
+
+export const getUserDataPath = ipcFunction(
+  "get-user-data-path",
+  async (): Promise<string> => {
+    const isPackaged = await getIsPackaged();
+    // dev mode
+    if (!isPackaged) {
+      return ensurePath(path.join(PACKAGE_ROOT, "user_data"));
+    }
+    // prod mode
+    return ensurePath(path.join(electron.app.getPath("userData"), "user_data"));
   }
-  // prod mode
-  const isRenderer = process && process.type === "renderer";
-  if (isRenderer) {
-    return electron.ipcRenderer.invoke("get-user-data-path");
-  }
-  return path.join(electron.app.getPath("userData"), "user_data");
-}
+);

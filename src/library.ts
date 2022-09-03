@@ -1,4 +1,4 @@
-import { mkdir, readdir, readFile, appendFile } from "node:fs/promises";
+import { readdir, readFile, appendFile } from "node:fs/promises";
 import path from "node:path";
 const SgfParser = require('ts-sgf-parser').SgfParser;
 import { ImmutableSituation, gameStart, sgfMoveToMove } from "./go";
@@ -44,7 +44,6 @@ function getMiaiValueFromComment(comment: string): number | null {
 
 async function getAttemptFilePath(): Promise<string> {
   const userDataPath = await getUserDataPath();
-  await mkdir(userDataPath, {recursive: true});
   return path.join(userDataPath, ATTEMPTS_FILE);
 }
 
