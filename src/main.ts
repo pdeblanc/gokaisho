@@ -1,6 +1,5 @@
 import { app, ipcMain, BrowserWindow } from "electron";
 import * as path from "path";
-import { KataGoProcess } from "./katago";
 import { ipcMappings } from "./ipc";
 // need to import anything that uses ipc
 require("./paths");
@@ -28,14 +27,6 @@ const OPTIONS = {
 };
 
 function createWindow() {
-  /*
-  const engine = new KataGoProcess();
-
-  ipcMain.handle("process-katago-query", async (event, query) => {
-    return engine.processQuery(query);
-  });
-  */
-
   for (const ipcMapping of ipcMappings) {
     const {name, f} = ipcMapping;
     ipcMain.handle(name, async(event, ...args) => {

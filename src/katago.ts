@@ -55,17 +55,16 @@ export class KataGoProcess extends KataGo {
   resolveReady: (value: PromiseLike<null>) => void;
   queryResolvers: {[key: string]: (value: PromiseLike<any>) => void};
 
-  constructor() {
+  constructor(configPath: string) {
     super();
     const katago = "/opt/homebrew/bin/katago";
     const model = "/Users/peter/.katrain/kata1-b40c256-s11101799168-d2715431527.bin.gz";
-    const config = "/Users/peter/repos/gokaisho/analysis_config.cfg";
     this.queryResolvers = {};
     this.ready = new Promise(
       (resolve, reject) => this.resolveReady = resolve
     )
     this.process = spawn(
-      katago, ["analysis", "-model", model, "-config", config]
+      katago, ["analysis", "-model", model, "-config", configPath]
     );
     this.process.stderr.on("data", data => this.onStdErr(data));
     const splitter = this.process.stdout.pipe(StreamSplitter("\n"));

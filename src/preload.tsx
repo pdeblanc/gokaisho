@@ -4,6 +4,7 @@ import { createRoot } from 'react-dom/client';
 import MiaiValueQuiz from "./miai_value_quiz";
 import { loadMiaiValueSgfs } from "./library";
 import { KataGoProcess, KataGoIpcClient } from "./katago";
+import { getAnalysisConfigPath } from "./paths";
 
 declare global {
     interface Window { main: any; }
@@ -16,7 +17,8 @@ window.main = async function() {
 
   // load problems
   const problems = await loadMiaiValueSgfs();
-  const katago = new KataGoProcess();
+  const analysisConfigPath = await getAnalysisConfigPath();
+  const katago = new KataGoProcess(analysisConfigPath);
   createRoot(document.getElementById("react-root")).render(
     <MiaiValueQuiz problems={problems} katago={katago} />
   );

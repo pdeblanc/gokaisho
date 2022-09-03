@@ -1,9 +1,19 @@
 import path from "node:path";
-import { mkdir } from "node:fs/promises";
+import { access, constants, mkdir, readFile, writeFile } from "node:fs/promises";
 import * as electron from "electron";
 import { ipcFunction } from "./ipc";
 
 const PACKAGE_ROOT = path.dirname(__dirname);
+
+async function exists(path: string): Promise<boolean> {
+  try {
+    await access(path, constants.R_OK);
+    return true;
+  } catch {
+    return false;
+  }
+};
+
 
 async function ensurePath(path: string): Promise<string> {
   await mkdir(path, {recursive: true});
@@ -26,3 +36,17 @@ export const getUserDataPath = ipcFunction(
     return ensurePath(path.join(electron.app.getPath("userData"), "user_data"));
   }
 );
+
+export async function getAnalysisConfigPath(): Promise<string> {
+  const userDataPath = await getUserDataPath();
+  const configPath = path.join(userDataPath, "analysis_config.cfg");
+  const alreadyExists = await exists(configPath);
+  if (!alreadyExists) {
+    const templatePath = path.join(PACKAGE_ROOT, "analysis_config.cfg");
+    let data = await readFile(templatePath, "utf8");
+    const logDir = path.join(userDataPath, "analysis_logs");
+    data = data.replace("/path/to/analysis_logs", logDir);
+    await writeFile(configPath, data, "utf8");
+  }
+  return configPath;
+}
