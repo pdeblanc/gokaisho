@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
-import Goban from "./goban/goban";
-import { randomSymmetry, transformJaCoord } from "./rotate";
-import { Symmetry } from "./types";
-import { transformMove } from "./go";
-import { MiaiValueProblem, saveAttempt } from "./library";
-import { KataGo, query } from "./katago";
-import { range } from "./util";
+import Goban from "../goban/goban";
+import { randomSymmetry, transformJaCoord } from "../rotate";
+import { Symmetry } from "../types";
+import { transformMove } from "../go";
+import { MiaiValueProblem, saveAttempt } from "../library";
+import { KataGo, query } from "../katago";
+import { range } from "../util";
 
 type MiaiQuizProps = {
   problems: Array<MiaiValueProblem>;

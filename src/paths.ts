@@ -37,6 +37,21 @@ export const getUserDataPath = ipcFunction(
   }
 );
 
+export const promptForKataGoExecutablePath = ipcFunction(
+  "prompt-for-katago-executable-path",
+  async(defaultPath): Promise<string | null> => {
+    const result = await electron.dialog.showOpenDialog(null, {
+      defaultPath,
+      properties: ['openFile', 'showHiddenFiles'],
+      title: "Select the KataGo executable",
+    });
+    if (result.filePaths.length > 0) {
+      return result.filePaths[0];
+    }
+    return null;
+  }
+)
+
 export async function getAnalysisConfigPath(): Promise<string> {
   const userDataPath = await getUserDataPath();
   const configPath = path.join(userDataPath, "analysis_config.cfg");
