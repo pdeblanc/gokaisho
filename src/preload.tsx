@@ -2,7 +2,7 @@ import { ipcRenderer } from "electron";
 import React, { Component } from 'react';
 import { createRoot } from 'react-dom/client';
 import MiaiValueQuiz from "./activities/miai_value_quiz";
-import Preferences from "./activities/preferences";
+import Root from "./activities/preferences";
 import { loadMiaiValueSgfs } from "./library";
 import { KataGoProcess, KataGoIpcClient } from "./katago";
 import { getAnalysisConfigPath } from "./paths";
@@ -21,7 +21,7 @@ window.main = async function() {
   const analysisConfigPath = await getAnalysisConfigPath();
   const katago = new KataGoProcess(analysisConfigPath);
   createRoot(document.getElementById("react-root")).render(
-    <Preferences />
+    <Root />
   );
   // <MiaiValueQuiz problems={problems} katago={katago} />
 };
