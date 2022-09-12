@@ -37,13 +37,13 @@ export const getUserDataPath = ipcFunction(
   }
 );
 
-export const promptForKataGoExecutablePath = ipcFunction(
+export const promptToSelectFile = ipcFunction(
   "prompt-for-katago-executable-path",
-  async(defaultPath): Promise<string | null> => {
+  async(defaultPath: string, prompt: string): Promise<string | null> => {
     const result = await electron.dialog.showOpenDialog(null, {
       defaultPath,
       properties: ['openFile', 'showHiddenFiles'],
-      title: "Select the KataGo executable",
+      title: prompt,
     });
     if (result.filePaths.length > 0) {
       return result.filePaths[0];

@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
-import { promptForKataGoExecutablePath } from "../paths";
+import FileSelector from "../components/file_selector";
 
 type PreferencesState = {
   kataGoExecutablePath: string | null;
   kataGoModelPath: string | null;
 };
+
 
 class Preferences extends React.Component<{}, PreferencesState> {
   constructor(props: {}) {
@@ -15,28 +16,22 @@ class Preferences extends React.Component<{}, PreferencesState> {
     };
   }
 
-  async getExecutablePath() {
-    const selectedPath = await promptForKataGoExecutablePath(this.state.kataGoExecutablePath);
-    if (selectedPath) {
-      this.setState({kataGoExecutablePath: selectedPath});
-    }
-  }
-
   render() {
-    const {kataGoExecutablePath} = this.state;
+    const {kataGoExecutablePath, kataGoModelPath} = this.state;
     return <div>
       <h1>Preferences</h1>
-      <p>
-	KataGo Executable:
-      </p>
-      <p>
-	<input
-	  size={50}
-	  value={kataGoExecutablePath}
-	  onChange={event => this.setState({kataGoExecutablePath: event.target.value})}
-	/>
-	<button onClick={() => this.getExecutablePath()}>Choose...</button>
-      </p>
+      <p>KataGo Executable:</p>
+      <FileSelector
+	prompt="Select the KataGo Executable"
+	value={kataGoExecutablePath}
+	onUpdate={value => this.setState({kataGoExecutablePath: value})}
+      />
+      <p>KataGo Model:</p>
+      <FileSelector
+	prompt="Select the KataGo Model File"
+	value={kataGoModelPath}
+	onUpdate={value => this.setState({kataGoModelPath: value})}
+      />
     </div>
   };
 }
